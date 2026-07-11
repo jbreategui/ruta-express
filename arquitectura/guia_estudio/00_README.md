@@ -17,8 +17,8 @@ cada requisito, sino para entender la lógica y poder defenderla ante el comité
 | 06 | [06_c4_nivel1_contexto_B.md](06_c4_nivel1_contexto_B.md) | C4 Nivel 1 (Alternativa B): idéntico a A y por qué |
 | 07 | [07_c4_nivel2_contenedores_B.md](07_c4_nivel2_contenedores_B.md) | C4 Nivel 2 (Alternativa B): servicios autónomos, Log = fuente de verdad |
 | 08 | [08_c4_nivel3_componentes_B.md](08_c4_nivel3_componentes_B.md) | C4 Nivel 3 (Alternativa B): los 3 diagramas (inventario, log, última milla) |
-| 09 | 09_vista_dinamica_y_decisiones.md | *(pendiente)* Diagramas de secuencia + ADRs: cómo defender cada decisión |
-| 10 | 10_despliegue.md | *(pendiente)* Cómo el diseño se vuelve infraestructura: Terraform, red y seguridad |
+| 09 | [09_vista_dinamica_y_decisiones.md](09_vista_dinamica_y_decisiones.md) | Diagramas de secuencia (comportamiento) + los 9 ADRs: cómo defender cada decisión |
+| 10 | [10_despliegue.md](10_despliegue.md) | Cómo el diseño se vuelve infraestructura: despliegue, red, seguridad, DR y Terraform |
 
 ## Cómo usar cada ficha
 Cada ficha tiene la misma estructura: **el concepto → cómo está aplicado en nuestros archivos → la
