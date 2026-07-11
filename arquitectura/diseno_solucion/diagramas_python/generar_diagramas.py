@@ -261,7 +261,72 @@ def b_n3():
         outbox >> Relationship("secretos") >> iam
 
 
+def a_n3_bus():
+    with Diagram("Alternativa A (Orquestada) - Nivel 3: Bus de Eventos", filename="A_n3b_bus_eventos",
+                 show=False, direction="LR", graph_attr=C4, edge_attr=EDGE, node_attr=NODE, outformat="png"):
+        prod = System("Productores", "OMS, WMS, TMS, app, ERP", external=True)
+        cons = System("Consumidores", "última milla, portal, TMS, analítica", external=True)
+        dlq = Database("DLQ", "mensajes muertos")
+        obs = System("Observabilidad", "Azure Monitor", external=True)
+
+        with SystemBoundary("Bus de Eventos Central"):
+            ingesta = Container("Ingesta / Publicador", "Servicio", "Recibe con correlationId")
+            schema = Container("Validador de Esquemas", "Servicio", "Esquema versionado")
+            router = Container("Enrutador (Topics/Colas)", "Servicio", "Distribuye a suscriptores")
+            retry = Container("Reintentos + DLQ", "Servicio", "Backoff, dead-letter")
+            backp = Container("Backpressure", "Servicio", "Regula ante saturación")
+            prio = Container("Priorizador por SLA", "Servicio", "Críticos primero")
+            replay = Container("Motor de Replay", "Servicio", "Reproceso por rango")
+            seq = Container("Secuenciador", "Servicio", "Orden lógico por agregado")
+            p2p = Container("Adaptador Punto-a-Punto", "Servicio", "Convivencia transicional")
+
+        prod >> Relationship("publica evento · AMQP") >> ingesta
+        ingesta >> Relationship("valida") >> schema
+        schema >> Relationship("evento válido") >> router
+        router >> Relationship("ordena") >> seq
+        seq >> Relationship("prioriza") >> prio
+        prio >> Relationship("entrega · AMQP") >> cons
+        prio >> Relationship("reintenta") >> retry
+        retry >> Relationship("dead-letter") >> dlq
+        router >> Relationship("regula") >> backp
+        replay >> Relationship("reinyecta") >> router
+        p2p >> Relationship("flujo transicional") >> cons
+
+
+def a_n3_ultima():
+    with Diagram("Alternativa A (Orquestada) - Nivel 3: Backend de Última Milla", filename="A_n3c_ultima_milla",
+                 show=False, direction="LR", graph_attr=C4, edge_attr=EDGE, node_attr=NODE, outformat="png"):
+        app = System("App de Conductores", "móvil", external=True)
+        bus = System("Bus de Eventos", "Event Hubs + Service Bus", external=True)
+        ddb = Database("Sincronización móvil", "DynamoDB")
+        s3 = Database("Evidencias", "S3 + KMS")
+        portal = System("Portal / CRM", "APP-18/20", external=True)
+
+        with SystemBoundary("Backend de Última Milla"):
+            apimov = Container("API Móvil", "REST", "OAuth2+PKCE")
+            inbox = Container("Consumidor (Inbox)", "Servicio", "Dedup por eventId")
+            sync = Container("Store-and-Forward", "Servicio", "Confirma y reintenta offline")
+            evid = Container("Gestor de Evidencias", "Servicio", "Vínculo a orden + hash")
+            tax = Container("Taxonomía de Excepciones", "Servicio", "Código + motivo")
+            acc = Container("Acciones Automáticas", "Servicio", "Reintento/devolución/escala")
+            prev = Container("Acciones Preventivas", "Servicio", "Riesgo dirección/ausencia")
+            track = Container("Registro de Tracking", "Servicio", "Ubicación cada 2 min")
+
+        app >> Relationship("entregas / evidencias") >> apimov
+        apimov >> Relationship("captura offline") >> sync
+        bus >> Relationship("eventos despacho") >> inbox
+        sync >> Relationship("persiste") >> evid
+        evid >> Relationship("cifrada + hash · KMS") >> s3
+        sync >> Relationship("estado sync") >> ddb
+        apimov >> Relationship("clasifica") >> tax
+        tax >> Relationship("dispara") >> acc
+        tax >> Relationship("propaga") >> portal
+        inbox >> Relationship("evalúa riesgo") >> prev
+        apimov >> Relationship("ubicación") >> track
+        track >> Relationship("persiste") >> ddb
+
+
 if __name__ == "__main__":
-    a_n1(); a_n2(); a_n3()
+    a_n1(); a_n2(); a_n3(); a_n3_bus(); a_n3_ultima()
     b_n1(); b_n2(); b_n3()
-    print("Listo: 6 PNG generados en", os.getcwd())
+    print("Listo: 8 PNG generados en", os.getcwd())
