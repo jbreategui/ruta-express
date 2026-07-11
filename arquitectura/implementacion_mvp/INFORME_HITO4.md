@@ -1,6 +1,6 @@
 # Informe — Hito 4: TO BE Implementación
 **Proyecto:** RutaExpress Fulfillment & Transporte · **Grupo 6** · Programa de Arquitectura de Soluciones Multinube (UTEC)
-**Elaboración:** equipo Grupo 6 con apoyo de IA (Claude — Anthropic)
+**Elaboración:** equipo Grupo 6
 
 ---
 
@@ -92,4 +92,4 @@ Precios de lista aprox. (a confirmar en calculadoras oficiales). Detalle en `cos
 - **Evidencia:** qué capturar en cada paso y qué prueba, en `guia_evidencia.md`.
 
 ---
-*Informe Hito 4 — Grupo 6 RutaExpress · con apoyo de IA (Claude — Anthropic)*
+*Informe Hito 4 — Grupo 6 RutaExpress*

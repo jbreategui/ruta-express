@@ -124,4 +124,4 @@ terraform destroy    # elimina todo el stack (NUNCA az group delete)
 - [ ] **Costos por nube** → §4
 - [ ] **API mock** → §2.4 y §2.5 (mocks WMS/ERP en distintos modos)
 
-*Guía de evidencia — Hito 4 · Grupo 6 RutaExpress · con apoyo de IA (Claude — Anthropic)*
+*Guía de evidencia — Hito 4 · Grupo 6 RutaExpress*

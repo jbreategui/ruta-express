@@ -1,7 +1,7 @@
 # Decisiones de Diseño — Architectural Decision Records (ADR)
 
 **Proyecto:** RutaExpress TO-BE · Grupo 6 · Hito "TO BE: Diseño de Arquitectura de Solución"
-**Elaboración:** análisis del equipo con apoyo de IA (Claude — Anthropic) · **Fecha:** 2026-07-09
+**Elaboración:** análisis del equipo · **Fecha:** 2026-07-09
 **Formato:** Contexto → Opciones → Decisión → Consecuencias. Estado: todas **Aceptadas** salvo indicación.
 
 ---

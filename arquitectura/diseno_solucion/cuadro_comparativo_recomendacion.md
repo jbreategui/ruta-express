@@ -33,4 +33,4 @@ Escala 1–5 · el peso refleja la prioridad del caso (recuperarse de Cyber Days
 **Cuándo elegir B:** si el comité prioriza la escala de equipos autónomos y la auditoría regulatoria por encima de la velocidad del MVP, B es la mejor arquitectura — y este cuadro lo dice con puntajes reales, no con un espantapájaros.
 
 ---
-*Elaboración: equipo Grupo 6 con apoyo de IA (Claude — Anthropic) · 2026-07-09*
+*Elaboración: equipo Grupo 6 · 2026-07-09*

@@ -114,4 +114,4 @@ SKUs de nivel **dev**, con scale-to-zero donde se pueda. Estimación preliminar 
 > Consecuencia: construimos y validamos localmente (fmt, validate, plan, conftest) sin gastar en nube. El despliegue queda como último paso, controlado y con confirmación.
 
 ---
-*Análisis del alcance — Hito 4 · Grupo 6 RutaExpress · elaborado con apoyo de IA (Claude — Anthropic)*
+*Análisis del alcance — Hito 4 · Grupo 6 RutaExpress*

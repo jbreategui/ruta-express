@@ -1,7 +1,7 @@
 # Proyecto Integrador Final — RutaExpress Fulfillment & Transporte
 **Grupo 6** · Programa de Arquitectura de Soluciones Multinube (UTEC)
 
-Portada e índice general de los entregables. Elaborado con apoyo de IA (Claude — Anthropic).
+Portada e índice general de los entregables.
 
 ---
 
@@ -54,4 +54,4 @@ MVP de la Alternativa A, **Azure + AWS**, 100% Terraform, con 5 patrones (Micros
 - El MVP está **listo para desplegar pero no desplegado**: el `terraform apply` es el paso final, con credenciales de estudiante (Azure for Students + AWS propia), sin gasto real.
 - **Multinube no forzado**: se usan las nubes que el caso ya justifica (Azure núcleo, AWS última milla, GCP analítica); el MVP usa 2 (Azure + AWS) como pide el mínimo.
 
-*Grupo 6 RutaExpress · Programa de Arquitectura de Soluciones Multinube — UTEC · con apoyo de IA (Claude — Anthropic)*
+*Grupo 6 RutaExpress · Programa de Arquitectura de Soluciones Multinube — UTEC*

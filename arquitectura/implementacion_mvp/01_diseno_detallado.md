@@ -153,4 +153,4 @@ El naming de recursos incorpora `owner_alias` + `environment` para no colisionar
 4. **Costos** (`costos_estimados.md`) + **README** de despliegue (paso a paso para el `apply` final).
 5. **Revisión crítica final** (Fable) contra el enunciado, y recién ahí el `terraform apply`.
 
-*Diseño detallado — Hito 4 · Grupo 6 RutaExpress · con apoyo de IA (Claude — Anthropic)*
+*Diseño detallado — Hito 4 · Grupo 6 RutaExpress*

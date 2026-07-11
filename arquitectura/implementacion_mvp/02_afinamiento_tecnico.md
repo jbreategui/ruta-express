@@ -100,4 +100,4 @@ Región referencia: Azure **East US 2** / AWS **us-east-1**. SKUs de nivel **dev
 > Con la práctica del profe (`terraform destroy` al terminar cada sesión), el costo real tiende a **centavos/pocos dólares**. La tabla es "si quedara encendido un mes completo". Los drivers de costo son el **node pool de AKS** y el **Service Bus Standard**; el node pool se apaga con `destroy`, y Service Bus se puede bajar a Basic (colas en vez de topic).
 
 ---
-*Afinamiento técnico — Hito 4 · Grupo 6 RutaExpress · con apoyo de IA (Claude — Anthropic)*
+*Afinamiento técnico — Hito 4 · Grupo 6 RutaExpress*

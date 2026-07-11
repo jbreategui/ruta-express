@@ -1,7 +1,7 @@
 # Proyecto Integrador Final — RutaExpress Fulfillment & Transporte
 **Grupo 6** · Programa de Arquitectura de Soluciones Multinube (UTEC)
 
-Repositorio del proyecto integrador: de la Arquitectura Empresarial (TOGAF/ADM) al diseño e implementación de una solución logística **multinube**. Elaborado con apoyo de IA (Claude — Anthropic).
+Repositorio del proyecto integrador: de la Arquitectura Empresarial (TOGAF/ADM) al diseño e implementación de una solución logística **multinube**.
 
 ---
 
@@ -40,4 +40,4 @@ Repositorio del proyecto integrador: de la Arquitectura Empresarial (TOGAF/ADM) 
     └── carpetas_adicionales/ (lineamientos y contexto)
 ```
 
-*Grupo 6 RutaExpress · Programa de Arquitectura de Soluciones Multinube — UTEC · con apoyo de IA (Claude — Anthropic)*
+*Grupo 6 RutaExpress · Programa de Arquitectura de Soluciones Multinube — UTEC*

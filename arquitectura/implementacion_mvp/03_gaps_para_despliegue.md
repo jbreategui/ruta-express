@@ -52,4 +52,4 @@ Leyenda esfuerzo: **S** = corto (<30 min) · **M** = medio (30-90 min) · **L** 
 - **AWS:** cuenta propia (IAM funciona → el bridge va sin cambios; uso en free tier ≈ $0). **No** usar AWS Academy.
 - Disciplina: **desplegar → evidencia → `terraform destroy`**.
 
-*Gaps de despliegue — Hito 4 · Grupo 6 RutaExpress · con apoyo de IA (Claude — Anthropic)*
+*Gaps de despliegue — Hito 4 · Grupo 6 RutaExpress*
