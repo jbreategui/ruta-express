@@ -5,13 +5,13 @@
 
 ```mermaid
 C4Container
-    title Contenedores — Plataforma Logística RutaExpress TO-BE (Alternativa orquestada)
+    title Contenedores — Plataforma Logística RutaExpress (Alternativa orquestada)
 
     Person(cliente, "Cliente B2B", "")
     Person(conductor, "Conductor", "App móvil")
     Person(operacion, "Operación / Finanzas", "")
 
-    System_Boundary(plat, "Plataforma Logística RutaExpress TO-BE") {
+    System_Boundary(plat, "Plataforma Logística RutaExpress") {
         Container(apim, "API Gateway y Gobierno", "Azure API Management", "Único punto de entrada: contratos OpenAPI versionados, OAuth2/OIDC, rate limiting y cuotas")
         Container(oms, "OMS — Orquestador de Pedidos", "Azure AKS", "Ciclo de vida de orden e inventario: validación, deduplicación, idempotencia, estado canónico, Saga y conciliación")
         ContainerDb(sql, "BD Transaccional", "Azure SQL", "Órdenes, inventario, outbox y auditoría")

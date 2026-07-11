@@ -43,7 +43,7 @@ def _contexto(titulo, filename, nota_plataforma):
         ope = Person("Operación RutaExpress", "Supervisa pedidos, rutas y SLA")
         fin = Person("Finanzas", "Concilia estados y liquidación")
 
-        plat = System("Plataforma RutaExpress TO-BE", nota_plataforma)
+        plat = System("Plataforma Logística RutaExpress", nota_plataforma)
 
         wms = System("WMS - Almacenes", "Picking (on-premises)", external=True)
         tms = System("TMS - Transporte", "Rutas y entregas", external=True)

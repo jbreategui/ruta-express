@@ -5,14 +5,14 @@
 
 ```mermaid
 C4Context
-    title Contexto — Plataforma Logística RutaExpress TO-BE
+    title Contexto — Plataforma Logística RutaExpress
 
     Person(cliente, "Cliente B2B / Retail", "Envía órdenes y consulta trazabilidad")
     Person(conductor, "Conductor", "Ejecuta entregas y registra evidencias")
     Person(operacion, "Operación RutaExpress", "Supervisa pedidos, inventario, rutas y SLA")
     Person(finanzas, "Finanzas", "Concilia estados, evidencias y liquidación")
 
-    System(plataforma, "Plataforma Logística RutaExpress TO-BE", "Coordina orden, inventario, despacho, última milla, evidencias y trazabilidad end-to-end")
+    System(plataforma, "Plataforma Logística RutaExpress", "Coordina orden, inventario, despacho, última milla, evidencias y trazabilidad end-to-end")
 
     System_Ext(wms, "WMS — Almacenes", "Gestión de almacén y picking — on-premises")
     System_Ext(tms, "TMS — Transporte", "Gestión de transporte y rutas")
