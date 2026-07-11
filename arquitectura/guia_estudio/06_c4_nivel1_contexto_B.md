@@ -43,4 +43,4 @@ aplica igual aquí, sin cambios.
 ## Archivos fuente
 - `alternativa_B_coreografiada/01_nivel1_contexto.md`
 - `diagramas_python/B_n1_contexto.png`
-- Detalle de cada elemento: [fase_2_c4_nivel1_contexto.md](fase_2_c4_nivel1_contexto.md)
+- Detalle de cada elemento: [02_c4_nivel1_contexto.md](02_c4_nivel1_contexto.md)

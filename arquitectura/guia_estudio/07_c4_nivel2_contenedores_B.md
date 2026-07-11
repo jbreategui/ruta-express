@@ -93,4 +93,4 @@ ID— y **consistencia eventual** en todas las lecturas (CQRS).
 ## Archivos fuente
 - `alternativa_B_coreografiada/02_nivel2_contenedores.md` (+ sección "La Saga coreografiada")
 - `diagramas_python/B_n2_contenedores.png`
-- Contraste directo con A: [fase_3_c4_nivel2_contenedores.md](fase_3_c4_nivel2_contenedores.md)
+- Contraste directo con A: [03_c4_nivel2_contenedores_A.md](03_c4_nivel2_contenedores_A.md)

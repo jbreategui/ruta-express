@@ -105,4 +105,4 @@ transporte. Es un participante autónomo de la coreografía. → RF-22…29.
 - `alternativa_B_coreografiada/03_nivel3_componentes_inventario.md` → `B_n3_inventario.png`
 - `alternativa_B_coreografiada/03b_nivel3_componentes_log_eventos.md` → `B_n3b_log_eventos.png`
 - `alternativa_B_coreografiada/03c_nivel3_componentes_ultima_milla.md` → `B_n3c_ultima_milla.png`
-- Contraste con A: [fase_4_c4_nivel3_componentes.md](fase_4_c4_nivel3_componentes.md)
+- Contraste con A: [04_c4_nivel3_componentes_A.md](04_c4_nivel3_componentes_A.md)
