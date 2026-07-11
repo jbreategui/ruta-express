@@ -1,0 +1,24 @@
+# --- Config y credenciales de herramientas (NO van al repo) ---
+.claude/
+*.env
+*.pem
+id_rsa*
+*.tfvars.secret
+
+# --- Terraform ---
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+plan.json
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.db
+
+# --- Material con copyright del profesor (excluido de repo PÚBLICO) ---
+proyecto/
+clase/
+work/
+emitir_poliza_vehicular.md

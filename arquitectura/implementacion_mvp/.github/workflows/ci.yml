@@ -1,0 +1,44 @@
+name: CI
+
+# Módulo 5 (DevOps): valida el IaC y las apps en cada push/PR.
+# NO despliega (no hace apply) — coherente con "todo listo para desplegar, deploy al final".
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  terraform:
+    name: Terraform (fmt + validate)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Format check
+        run: terraform fmt -recursive -check terraform/
+      - name: Init (sin backend, sin nube)
+        working-directory: terraform/environments/dev
+        run: terraform init -backend=false -input=false
+      - name: Validate
+        working-directory: terraform/environments/dev
+        run: terraform validate
+
+  apps:
+    name: Apps OMS (flake8 + pytest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependencias
+        working-directory: apps/oms
+        run: pip install -r requirements.txt
+      - name: Lint (flake8)
+        working-directory: apps/oms
+        run: flake8 app tests
+      - name: Tests (pytest)
+        working-directory: apps/oms
+        run: python -m pytest tests/ -q

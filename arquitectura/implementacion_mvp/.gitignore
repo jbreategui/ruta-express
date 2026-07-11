@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+*.db
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfplan
+plan.json
+
+# Secretos (nunca commitear)
+*.tfvars.secret
+.env
