@@ -7,15 +7,15 @@ Portada e índice general de los entregables.
 
 ## El caso
 **RutaExpress** es un operador logístico multinube (Azure + AWS + GCP + on-premises) con dolores de **disponibilidad, integridad y operación**: en Cyber Days el WMS se cayó 6 h (240k pedidos en cola, USD 1.1M en penalidades), 32k órdenes duplicadas, conflictos de inventario, 12.5% de entregas fallidas y USD 2.4M retenidos por evidencias faltantes.
-📄 Caso y anexo: [`../transcripcion/proyecto-rutaexpress.md`](../transcripcion/proyecto-rutaexpress.md) · Enunciado: [`../transcripcion/enunciado-proyecto-integrador-final.md`](../transcripcion/enunciado-proyecto-integrador-final.md)
+ Caso y anexo: [`../transcripcion/proyecto-rutaexpress.md`](../transcripcion/proyecto-rutaexpress.md) · Enunciado: [`../transcripcion/enunciado-proyecto-integrador-final.md`](../transcripcion/enunciado-proyecto-integrador-final.md)
 
 ## Mapa de los 4 hitos
 | Hito | Qué pide | Dónde está | Estado |
 |---|---|---|---|
-| **1 · Arquitectura Empresarial** | BMC, modelo de datos, portafolio de apps, ADM/TOGAF (AS-IS/TO-BE, Migration Planning) | Entrega original (TOGAF/ADM) | ✅ Base de las 3 iniciativas |
-| **2 · TO-BE Requerimientos** | ≥3 iniciativas, RF, RNF, criterios de aceptación | [`requerimientos/`](requerimientos/) | ✅ 29 RF + 27 RNF, validados |
-| **3 · TO-BE Diseño de Solución** | 2 alternativas, C4 nivel 1-2-3, íconos cloud, lineamientos, patrones, ADR, comparativo | [`diseno_solucion/`](diseno_solucion/) | ✅ Completo |
-| **4 · TO-BE Implementación** | MVP, ≥2 nubes, ≥3 patrones, 100% IaC, costos, API mock | [`implementacion_mvp/`](implementacion_mvp/) | ✅ Código + IaC listos para desplegar |
+| **1 · Arquitectura Empresarial** | BMC, modelo de datos, portafolio de apps, ADM/TOGAF (AS-IS/TO-BE, Migration Planning) | Entrega original (TOGAF/ADM) | Base de las 3 iniciativas |
+| **2 · TO-BE Requerimientos** | ≥3 iniciativas, RF, RNF, criterios de aceptación | [`requerimientos/`](requerimientos/) | 29 RF + 27 RNF, validados |
+| **3 · TO-BE Diseño de Solución** | 2 alternativas, C4 nivel 1-2-3, íconos cloud, lineamientos, patrones, ADR, comparativo | [`diseno_solucion/`](diseno_solucion/) | Completo |
+| **4 · TO-BE Implementación** | MVP, ≥2 nubes, ≥3 patrones, 100% IaC, costos, API mock | [`implementacion_mvp/`](implementacion_mvp/) | Código + IaC listos para desplegar |
 
 ---
 
@@ -42,14 +42,14 @@ MVP de la Alternativa A, **Azure + AWS**, 100% Terraform, con 5 patrones (Micros
 - **Análisis y diseño**: [`00_analisis_mvp.md`](implementacion_mvp/00_analisis_mvp.md) · [`01_diseno_detallado.md`](implementacion_mvp/01_diseno_detallado.md) · [`02_afinamiento_tecnico.md`](implementacion_mvp/02_afinamiento_tecnico.md)
 - **Runbook de despliegue**: [`README.md`](implementacion_mvp/README.md) · **Guía de evidencia**: [`guia_evidencia.md`](implementacion_mvp/guia_evidencia.md) · **Costos por nube**: [`costos_estimados.md`](implementacion_mvp/costos_estimados.md) · **Gaps de despliegue**: [`03_gaps_para_despliegue.md`](implementacion_mvp/03_gaps_para_despliegue.md)
 - **Código**: `apps/` (OMS + mocks + Lambda + bridge) · **IaC**: `terraform/` (12 módulos + policy OPA/Rego)
-- Verificación: **20 tests** pasan · `terraform validate` Success · revisión crítica adversarial aplicada.
+- Verificación: **20 tests** pasan · `terraform validate` Success.
 
 ---
 
 ## Orden de lectura sugerido
 1. El **caso** (`../transcripcion/`) → 2. **Requerimientos** (`requerimientos/README.md`) → 3. **Diseño** (`diseno_solucion/00_README.md` → alternativas → comparativo/ADR) → 4. **Implementación** (`implementacion_mvp/INFORME_HITO4.md`).
 
-## Notas de alcance (honestidad)
+## Alcance y consideraciones
 - El **MVP** implementa un **subconjunto** de los 29 RF (la ruta crítica); el resto queda cubierto en el diseño. RF-09 (reconciliación) es solo de diseño.
 - El MVP está **listo para desplegar pero no desplegado**: el `terraform apply` es el paso final, con credenciales de estudiante (Azure for Students + AWS propia), sin gasto real.
 - **Multinube no forzado**: se usan las nubes que el caso ya justifica (Azure núcleo, AWS última milla, GCP analítica); el MVP usa 2 (Azure + AWS) como pide el mínimo.

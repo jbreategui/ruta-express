@@ -1,6 +1,6 @@
 # Cuadro Comparativo y Recomendación — Alternativas A y B
 
-**Regla de honestidad:** ambas alternativas cubren el 100% de los 29 RF y 27 RNF y comparten la misma huella multinube (ADR-01, ADR-02). Se compara **arquitectura** (cómo se coordinan los servicios), no proveedores. Ninguna fue diseñada para perder: cada una gana en criterios distintos.
+**Nota:** ambas alternativas cubren el 100% de los 29 RF y 27 RNF y comparten la misma huella multinube (ADR-01, ADR-02). Se compara **arquitectura** (cómo se coordinan los servicios), no proveedores. Ninguna fue diseñada para perder: cada una gana en criterios distintos.
 
 | | **Alternativa A — Orquestada** | **Alternativa B — Coreografiada** |
 |---|---|---|

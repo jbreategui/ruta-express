@@ -20,7 +20,7 @@ El MVP está **completo y validado localmente** (tests + `terraform validate`). 
 | **API mock permitido** | Mocks WMS/ERP (modos ok/slow/down · accept/reject) |
 
 ## 3. Alcance del MVP
-El MVP implementa un **subconjunto** de los 29 RF: la **ruta crítica** (~14 RF: RF-01…08, RF-10, RF-11, RF-14, RF-16, RF-22, RF-23). El resto queda cubierto **en el diseño (Hito 3)** y como trabajo futuro. Precisiones honestas: **RF-09 (reconciliación de inventario) NO está implementado** en el MVP (solo en el diseño); **RF-02** es validación básica (tipado, cantidades) sin catálogo de SKU ni cobertura de ventana; **RF-05** valida transiciones en cancelación. Esto es lo esperado en un prototipo/MVP.
+El MVP implementa un **subconjunto** de los 29 RF: la **ruta crítica** (~14 RF: RF-01…08, RF-10, RF-11, RF-14, RF-16, RF-22, RF-23). El resto queda cubierto **en el diseño (Hito 3)** y como trabajo futuro. Precisiones de alcance: **RF-09 (reconciliación de inventario) NO está implementado** en el MVP (solo en el diseño); **RF-02** es validación básica (tipado, cantidades) sin catálogo de SKU ni cobertura de ventana; **RF-05** valida transiciones en cancelación. Esto es lo esperado en un prototipo/MVP.
 
 - **Dentro:** OMS (dedup, idempotencia, Saga, CQRS, resiliencia) · bus con DLQ · última milla en AWS · mocks WMS/ERP · IaC de ambas nubes · CI de validación.
 - **Fuera (trabajo futuro):** GCP/analítica · portal/CRM/TMS reales · GitOps · multi-región/DR · API Management/WAF · Event Sourcing completo (Alternativa B).
@@ -80,9 +80,8 @@ Precios de lista aprox. (a confirmar en calculadoras oficiales). Detalle en `cos
 | Terraform — `validate` | **Success** (12 módulos, 2 nubes) |
 | CI (GitHub Actions) | Valida IaC + apps en cada push/PR (no despliega) |
 
-## 10. Limitaciones y trabajo futuro (honesto)
-- **Revisión crítica aplicada:** una revisión adversarial detectó bugs de lógica en la Saga (compensación incompleta, orden multilínea que dejaba stock colgado, cancelación sin compensar) y afirmaciones exageradas en la doc; **se corrigieron** y se agregaron tests que los cubren (17 en total). Este informe refleja el estado ya corregido.
-- **No desplegado aún**: el `apply` es el paso final; requiere credenciales y probablemente depuración de integración (cuota de vCPU en cuenta de estudiante, build de imágenes, apply de dos etapas).
+## 10. Limitaciones y trabajo futuro
+- **No desplegado aún**: el `apply` es el paso final; requiere credenciales y probablemente ajustes de integración (cuota de vCPU en la suscripción, build de imágenes, apply de dos etapas).
 - **Runtime no probado** para mocks, bridge y Lambda (solo el OMS tiene suite de tests). Se validan al desplegar.
 - **No implementado en el MVP:** RF-09 (reconciliación de inventario) — solo en el diseño; validación de reglas logísticas de RF-02 es básica.
 - **Trabajo futuro (bloque C):** Key Vault CSI + Workload Identity (en vez de kubernetes_secret), API Management/WAF delante del OMS, GitOps con Argo CD, GCP/analítica, DR multi-región.

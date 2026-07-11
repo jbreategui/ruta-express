@@ -96,4 +96,4 @@ C4Container
 1. `OMS` publica **OrdenValidada** → 2. `Inventario` la escucha, reserva y publica **InventarioReservado** → 3. `Adaptador ERP` la escucha, valoriza y publica **ValorizacionConfirmada** (o **Rechazada**) → 4. si fue **Rechazada**, `Inventario` la escucha y publica **InventarioLiberado** (compensación) → 5. los **proyectores** actualizan los read models y el portal/TMS ven el estado final.
 Nadie comanda a nadie: **cada paso es una reacción a un evento**, y el replay del log reconstruye cualquier estado (RF-19).
 
-> Trade-off honesto (para el comité): se gana autonomía, desacoplamiento y auditoría nativa (el log ES la historia); se paga con flujo más difícil de seguir — nadie "ve" la Saga completa, hay que reconstruirla con el correlation ID — y con consistencia eventual en todas las lecturas.
+> Trade-off (para el comité): se gana autonomía, desacoplamiento y auditoría nativa (el log ES la historia); se paga con flujo más difícil de seguir — nadie "ve" la Saga completa, hay que reconstruirla con el correlation ID — y con consistencia eventual en todas las lecturas.

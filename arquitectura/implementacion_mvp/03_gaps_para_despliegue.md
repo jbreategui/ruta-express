@@ -10,14 +10,14 @@ Leyenda esfuerzo: **S** = corto (<30 min) · **M** = medio (30-90 min) · **L** 
 
 | # | Gap | Estado | Qué se hizo |
 |---|---|---|---|
-| A1 | OMS sin driver para Azure SQL | ✅ **Cerrado** | `pymssql` en requirements; `DATABASE_URL` de despliegue documentada (mssql+pymssql) e inyectada por Terraform |
-| A2 | Inyección de secretos a los pods | ✅ **Cerrado** | `kubernetes_secret` desde Terraform (SQL/bus/SQS/AWS) inyectado como env por `secret_key_ref` en OMS y bridge |
-| A3 | Bridge sin Dockerfile/requirements | ✅ **Cerrado** | `apps/bridge/{requirements.txt, Dockerfile}` (azure-servicebus + boto3) |
-| A4 | Credencial cross-cloud del bridge | ✅ **Cerrado** | Módulo `aws-bridge-identity`: usuario IAM con `sqs:SendMessage`; key en Key Vault + secret del pod |
-| A5 | Apply de dos etapas no formalizado | ✅ **Cerrado** | Runbook del README con la secuencia `-target` (etapa 1 infra → build/push → etapa 2 workloads) |
-| A6 | Pods sin probes ni límites | ✅ **Cerrado** | liveness/readiness (`/health`) + requests/limits en los deployments |
-| A7 | Nombres globalmente únicos | ✅ **Cerrado** | `random_string` sufijo en ACR, Key Vault, SQL y Service Bus |
-| A8 | Red del OMS → Azure SQL | ✅ **Cerrado (private endpoint)** | Módulo `azure-network` (VNet + subredes); AKS con **Azure CNI** en la VNet; **private endpoint** de la SQL + **zona DNS privada** vinculada a la VNet. La SQL sigue sin acceso público (cumple la policy) y los pods la resuelven por IP privada. |
+| A1 | OMS sin driver para Azure SQL | **Cerrado** | `pymssql` en requirements; `DATABASE_URL` de despliegue documentada (mssql+pymssql) e inyectada por Terraform |
+| A2 | Inyección de secretos a los pods | **Cerrado** | `kubernetes_secret` desde Terraform (SQL/bus/SQS/AWS) inyectado como env por `secret_key_ref` en OMS y bridge |
+| A3 | Bridge sin Dockerfile/requirements | **Cerrado** | `apps/bridge/{requirements.txt, Dockerfile}` (azure-servicebus + boto3) |
+| A4 | Credencial cross-cloud del bridge | **Cerrado** | Módulo `aws-bridge-identity`: usuario IAM con `sqs:SendMessage`; key en Key Vault + secret del pod |
+| A5 | Apply de dos etapas no formalizado | **Cerrado** | Runbook del README con la secuencia `-target` (etapa 1 infra → build/push → etapa 2 workloads) |
+| A6 | Pods sin probes ni límites | **Cerrado** | liveness/readiness (`/health`) + requests/limits en los deployments |
+| A7 | Nombres globalmente únicos | **Cerrado** | `random_string` sufijo en ACR, Key Vault, SQL y Service Bus |
+| A8 | Red del OMS → Azure SQL | **Cerrado (private endpoint)** | Módulo `azure-network` (VNet + subredes); AKS con **Azure CNI** en la VNet; **private endpoint** de la SQL + **zona DNS privada** vinculada a la VNet. La SQL sigue sin acceso público (cumple la policy) y los pods la resuelven por IP privada. |
 
 ## B. Pasos que requieren TUS credenciales (en el momento del deploy)
 
@@ -37,13 +37,13 @@ Leyenda esfuerzo: **S** = corto (<30 min) · **M** = medio (30-90 min) · **L** 
 
 ---
 
-## Estimación honesta
+## Estimación de esfuerzo
 - **Cerrar todo el bloque A** (sin desplegar): ~**medio día** de trabajo de código/IaC. Deja el MVP realmente listo para un `apply` con alta probabilidad de éxito.
 - **Bloque B** (con tus credenciales): ~**2-4 horas** incluyendo el primer `apply`, build de imágenes y **depurar la integración** (siempre aparece algo en el primer deploy real).
 - **Bloque C**: solo si el profe exige el nivel "producción"; para un MVP se declara como trabajo futuro.
 
 ## Ruta recomendada
-1. ✅ **Bloque A cerrado (A1-A8)** — todo escrito y validado sin desplegar. El `terraform validate` pasa con private endpoint incluido.
+1. **Bloque A cerrado (A1-A8)** — todo escrito y validado sin desplegar. El `terraform validate` pasa con private endpoint incluido.
 2. Cuando estés listo, tú corres **B1-B6** con tus credenciales (Azure for Students + AWS propia); yo te acompaño depurando lo que salga.
 3. **C** queda como trabajo futuro en el informe.
 

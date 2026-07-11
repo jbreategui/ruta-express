@@ -10,7 +10,7 @@ El evento nace en Azure (bus) y lo consume la última milla en AWS. Cómo cruza 
 | Opción | Cómo | Trade-off |
 |---|---|---|
 | A. Event Grid → webhook | Service Bus emite a Event Grid; una suscripción webhook llama a la Lambda URL (HTTPS) | Nativo, pero Service Bus→Event Grid pide tier Premium (caro para dev) |
-| **B. Bridge worker → SQS → Lambda** ✅ | Un worker liviano en Azure lee del Service Bus y **reenvía a una cola AWS SQS**; la Lambda se dispara por SQS | **Durable** (SQS retiene + DLQ + retry), barato, 100% IaC, y el bridge es en sí el patrón "adaptador" del caso |
+| **B. Bridge worker → SQS → Lambda** | Un worker liviano en Azure lee del Service Bus y **reenvía a una cola AWS SQS**; la Lambda se dispara por SQS | **Durable** (SQS retiene + DLQ + retry), barato, 100% IaC, y el bridge es en sí el patrón "adaptador" del caso |
 | C. HTTP directo a Lambda URL | El publicador llama la Function URL por HTTPS | Simplísimo pero sin durabilidad (si la Lambda cae, se pierde) |
 | D. PrivateLink / VPN intercloud | Conectividad privada real | Producción; overkill para el MVP dev |
 

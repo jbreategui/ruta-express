@@ -35,7 +35,7 @@ Ambas son multinube best-of-breed con la **misma huella** (Azure núcleo, AWS ú
 | `diagramas_secuencia/` | **Vista dinámica** (complementa al C4 estático): recepción/dedup, Saga A orquestada, Saga B coreografiada y resiliencia del WMS — muestra el comportamiento en el tiempo y el contraste A vs B |
 | `anexos/despliegue_red_seguridad.md` | **Anexo (no es un nivel C4 del entregable):** vista de despliegue/red/seguridad de la alternativa recomendada — responde el feedback del profesor ("ver la red, cómo se conectan, seguridad") |
 | `decisiones_diseño.md` | ADR-01 … ADR-09 (incluye la bifurcación A/B y por qué el hub en Azure es un ADR, no una alternativa) |
-| `cuadro_comparativo_recomendacion.md` | Evaluación ponderada honesta + recomendación (A) |
+| `cuadro_comparativo_recomendacion.md` | Evaluación ponderada + recomendación (A) |
 | `lineamientos_aplicados.md` | Matriz de trazabilidad de los 54 lineamientos (ARQ/ESC/INT/OBS/SEG) → dónde se aplica cada uno |
 
 > El curso trabaja los **3 primeros niveles** del C4 (Módulo 2, Taller 3, pasos 6-9) y remite a **c4model.com** para la definición formal. El diagrama de despliegue es la **vista complementaria oficial** del C4 Model (Deployment diagram) y responde directamente al feedback del profesor: *"ver la red, cómo se conectan, seguridad"*.

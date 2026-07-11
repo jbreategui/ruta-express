@@ -8,7 +8,7 @@
 > - `clase/Arquitectura Empresarial - Empresa de Seguros (Sesión 1).drawio` (11 páginas) → ejemplos de las 4 capas + AS-IS
 > - `clase/Arquitectura Empresarial - Empresa de Seguros (Sesión 2).drawio` (17 páginas) → **ejemplo trabajado COMPLETO** de todos los entregables (capas + AS-IS + ADM completo + TO-BE)
 >
-> 💡 **Idea central:** las dos teorías te enseñan el *qué* y el *cómo*; los dos `.drawio` son la **plantilla resuelta** con una aseguradora ficticia. Tu proyecto (RutaExpress) consiste en **rehacer exactamente ese mismo conjunto de artefactos**, pero para tu caso.
+> **Idea central:** las dos teorías te enseñan el *qué* y el *cómo*; los dos `.drawio` son la **plantilla resuelta** con una aseguradora ficticia. Tu proyecto (RutaExpress) consiste en **rehacer exactamente ese mismo conjunto de artefactos**, pero para tu caso.
 
 ---
 
@@ -66,9 +66,9 @@ Y el flujo lógico que conecta las dos clases es este:
 - una **ciudad que crece sin planificación**,
 - una **casa construida sin plano**,
 - una aseguradora donde **cada área compra su propio sistema sin coordinación**.
-- 👉 Resultado: **caos, duplicidad de funcionalidades y alto costo de mantenimiento.**
+- Resultado: **caos, duplicidad de funcionalidades y alto costo de mantenimiento.**
 
-> 📌 **Por qué importa para tu caso:** RutaExpress es exactamente ese escenario — WMS on-prem, TMS en Azure, app en AWS, optimizador en GCP, portales SaaS, integraciones punto a punto. Es la "ciudad sin planificación". La AE es lo que vas a usar para ordenarla.
+> **Por qué importa para tu caso:** RutaExpress es exactamente ese escenario — WMS on-prem, TMS en Azure, app en AWS, optimizador en GCP, portales SaaS, integraciones punto a punto. Es la "ciudad sin planificación". La AE es lo que vas a usar para ordenarla.
 
 ---
 
@@ -118,7 +118,7 @@ Cada capa tiene **artefactos** (diagramas/modelos) concretos que debes producir.
 - Es el modelo de **"cómo fluye el valor"**.
 - *Ejemplo (seguros):* "Emitir Póliza Digital" = Descubrir producto → Cotizar → Evaluar riesgo → Emitir póliza → Activar cobertura. Otros value streams: Gestionar Siniestro, Renovación y Fidelización, Venta vía Bancaseguros.
 
-> 🔑 **Diferencia que cae en examen:** **Capacidad = QUÉ hace** (estable, no cambia seguido). **Proceso = CÓMO lo hace** (puede cambiar). **Value Stream = CÓMO FLUYE el valor** end-to-end hacia el cliente.
+> **Diferencia que cae en examen:** **Capacidad = QUÉ hace** (estable, no cambia seguido). **Proceso = CÓMO lo hace** (puede cambiar). **Value Stream = CÓMO FLUYE el valor** end-to-end hacia el cliente.
 
 ### 2.2 Arquitectura de Datos
 
@@ -138,7 +138,7 @@ Cada capa tiene **artefactos** (diagramas/modelos) concretos que debes producir.
 - *Ejemplo (seguros):* se agrupa por capas → **Canales** (Portal Público, Portal Privado, App, Portal Brokers, IVR, WhatsApp), **Integración** (APIs de Cotización/Emisión/Endosos/Renovación/Siniestros/Pagos), **Core** (Core de Seguros, Core de Pagos, CRM, ERP), **Soporte/Transversal** (BPMN, Data lakehouse, Notificaciones, IoT, GenAI, ECM).
 
 **b) Application Capability Mapping** (Mapeo de Aplicaciones con Capacidades) — cruza **qué aplicación soporta qué capacidad de negocio**.
-- Truco visual del ejemplo: usa un **semáforo** para evaluar cada capacidad → 🔴 Rojo = gran parte es manual · 🟡 Ámbar = está regular · 🟢 Verde = está bien. Sirve para detectar dónde duele.
+- Truco visual del ejemplo: usa un **semáforo** para evaluar cada capacidad → Rojo = gran parte es manual · Ámbar = está regular · Verde = está bien. Sirve para detectar dónde duele.
 
 ### 2.4 Arquitectura Tecnológica
 
@@ -171,7 +171,7 @@ Cada capa tiene **artefactos** (diagramas/modelos) concretos que debes producir.
 | **Datos (Entidades)** | Qué entidades se tocan (Producto, Cliente, Cotización, Póliza, Pago…). |
 | **Infraestructura** | Dónde corre (Cloud AWS, On-Premises Lima, Cloud SaaS…). |
 
-> 📌 El AS-IS **integra las 4 capas** sobre una misma cadena de valor: por cada etapa ves negocio (roles/pains), datos (entidades), aplicaciones y tecnología juntos. Esa es la respuesta a la pregunta de cierre del docente: *"¿cómo el AS-IS une las 4 capas?"*
+> El AS-IS **integra las 4 capas** sobre una misma cadena de valor: por cada etapa ves negocio (roles/pains), datos (entidades), aplicaciones y tecnología juntos. Esa es la respuesta a la pregunta de cierre del docente: *"¿cómo el AS-IS une las 4 capas?"*
 
 ---
 
@@ -215,7 +215,7 @@ Define el **gobierno** y los **principios/lineamientos** de arquitectura.
   - **Aplicaciones:** API-First · Evitar punto a punto · Preferir SaaS cuando sea viable.
   - **Tecnología:** Cloud-First · IaC (infraestructura como código) · Security by design.
 
-> 📌 Estos **lineamientos** son los mismos que el enunciado del proyecto pide aplicar en el diseño TO-BE (Integración, Seguridad, Observabilidad, etc.).
+> Estos **lineamientos** son los mismos que el enunciado del proyecto pide aplicar en el diseño TO-BE (Integración, Seguridad, Observabilidad, etc.).
 
 #### A. Architecture Vision — *¿Qué queremos lograr y por qué?*
 Se **alinea dirección y se justifica el cambio**. Aún **no** se diseñan apps ni tecnología. Contiene:
@@ -238,7 +238,7 @@ Aquí se diseñan las arquitecturas **objetivo (TO-BE)** de Negocio (B), Datos +
 2. Se dibuja el **AS-IS** (las 4 capas sobre el value stream).
 3. Se dibuja el **TO-BE** (las 4 capas objetivo sobre el mismo value stream).
 4. Se identifican los **Gaps o brechas** (diferencias AS-IS → TO-BE) y de ahí salen RF/RNF.
-- *Leyenda visual del TO-BE:* 🟢 Nuevo · 🟡 Modificar · 🔴 Eliminar (se marca cada app/componente según qué hay que hacer con él).
+- *Leyenda visual del TO-BE:* Nuevo · Modificar · Eliminar (se marca cada app/componente según qué hay que hacer con él).
 - *Ejemplo de gaps (seguros):* crear "APIs Productos Digitales", crear módulo de gestión de productos en el BackOffice, crear "API Motor de Riesgo (con Agente IA)" con auditoría, agregar Observabilidad (métricas/logs/trazas) a la API de emisión + dashboard tipo Grafana.
 
 #### E. Opportunities and Solutions — *¿Qué iniciativas o proyectos debemos ejecutar?*
@@ -254,7 +254,7 @@ Aquí se diseñan las arquitecturas **objetivo (TO-BE)** de Negocio (B), Datos +
 - Elaborar un **roadmap/cronograma** considerando **dependencias** entre iniciativas.
 - *Ejemplo:* tabla con Iniciativa · Costo aprox. (USD) · Tiempo (meses) · Gantt por mes (Mes 1…12). Costos del ejemplo: 60K, 50K, 100K, 80K, 80K, TBD… con duraciones de 2.5 a 4 meses.
 
-> 📌 **Esta fase F es la bisagra con el resto del proyecto:** el enunciado pide tomar **≥3 iniciativas de la Migration Planning** y desarrollarlas como requerimientos y diseño de solución.
+> **Esta fase F es la bisagra con el resto del proyecto:** el enunciado pide tomar **≥3 iniciativas de la Migration Planning** y desarrollarlas como requerimientos y diseño de solución.
 
 #### G. Implementation Governance — *¿Se está implementando conforme a la arquitectura definida?*
 - Al aprobarse el presupuesto, se asigna un **Arquitecto de Solución** para el diseño detallado.
@@ -335,7 +335,7 @@ Tu caso es **RutaExpress Fulfillment & Transporte** (operador logístico multinu
 3. **Hito 3 — TO-BE Diseño (dom 05-jul):** 2 alternativas de solución en C4 (niveles 1–3) con íconos AWS/Azure/GCP, lineamientos, patrones y ADRs + cuadro comparativo.
 4. **Hito 4 — TO-BE Implementación (dom 12-jul):** MVP con ≥2 nubes y ≥3 patrones (Microservicios, DDD, EDA, CQRS, SAGA, Resiliencia), 100% IaC, costos por nube.
 
-> ⚠️ **El más cercano es el Hito 1 (29-jun)** y es justamente el que cubren estas dos clases. Domina los 17 artefactos del `.drawio` de Sesión 2 y tendrás el molde exacto.
+> **El más cercano es el Hito 1 (29-jun)** y es justamente el que cubren estas dos clases. Domina los 17 artefactos del `.drawio` de Sesión 2 y tendrás el molde exacto.
 
 ---
 
@@ -379,4 +379,4 @@ Tu caso es **RutaExpress Fulfillment & Transporte** (operador logístico multinu
 2. ¿Qué es un gap o brecha?
 3. ¿Qué es una Situación Futura - TO-BE y para qué sirve?
 
-> 💬 *Tip de estudio:* responde estas 9 preguntas usando RutaExpress como ejemplo en vez de la aseguradora. Si puedes hacerlo de memoria, dominas el Hito 1.
+> *Tip de estudio:* responde estas 9 preguntas usando RutaExpress como ejemplo en vez de la aseguradora. Si puedes hacerlo de memoria, dominas el Hito 1.

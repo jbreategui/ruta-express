@@ -22,7 +22,7 @@ El MVP reproduce el flujo donde RutaExpress más sufrió — **duplicados de Cyb
 > Con este único flujo se tocan los 3 riesgos del anexo (disponibilidad, integridad, operación) y se demuestran 5 patrones.
 
 ## 2. Alcance IN / OUT
-> **El MVP implementa un SUBCONJUNTO de los 29 RF** — la **ruta crítica** del caso (~15 RF: RF-01…11, RF-14, RF-16, RF-22, RF-23). No se implementan los 29; el resto queda cubierto **en el diseño** (Hito 3) y se declara como trabajo futuro. Esto es lo correcto y esperado en un prototipo/MVP, pero se dice explícito para que el comité no espere los 29 codificados.
+> **El MVP implementa un SUBCONJUNTO de los 29 RF** — la **ruta crítica** del caso (~15 RF: RF-01…11, RF-14, RF-16, RF-22, RF-23). El resto queda cubierto **en el diseño** (Hito 3) y como trabajo futuro, según corresponde a un prototipo/MVP.
 
 **Dentro (MVP):** OMS con dedup/idempotencia/Saga/estado/CQRS · bus con DLQ · última milla en AWS · mocks WMS/ERP · IaC completo de ambas nubes · CI de validación · tabla de costos.
 **Fuera (queda como "trabajo futuro"):** GCP/analítica · portal/CRM/TMS reales · GitOps con Argo CD · Canary/Blue-Green · Feature Flags · Event Sourcing completo (eso es la Alternativa B) · multi-región/DR real.
@@ -108,8 +108,8 @@ SKUs de nivel **dev**, con scale-to-zero donde se pueda. Estimación preliminar 
 ## 8. Decisiones tomadas
 | # | Decisión | Resuelto |
 |---|---|---|
-| 1 | **Nubes del MVP** | ✅ **Azure + AWS** (hay suscripciones en ambas). |
-| 2 | **Nivel de entrega** | ✅ **Todo listo para desplegar** (IaC + código completos, `terraform validate/plan` en verde). El `terraform apply` a la nube es el **paso final**, se hará al cierre, no durante la construcción. |
+| 1 | **Nubes del MVP** | **Azure + AWS** (hay suscripciones en ambas). |
+| 2 | **Nivel de entrega** | **Todo listo para desplegar** (IaC + código completos, `terraform validate/plan` en verde). El `terraform apply` a la nube es el **paso final**, se hará al cierre, no durante la construcción. |
 
 > Consecuencia: construimos y validamos localmente (fmt, validate, plan, conftest) sin gastar en nube. El despliegue queda como último paso, controlado y con confirmación.
 
