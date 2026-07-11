@@ -91,8 +91,10 @@ Seguimos **UN pedido** desde que el cliente lo manda hasta que se entrega. En ca
 **Paso 4 — El jefe registra el pedido**
 - **De:** OMS → **A:** Azure SQL
 - **Qué pasa (4 cosas):** (1) **deduplica** (*¿ya recibí este pedido?* — los 32,000 duplicados del
-  caso); (2) le da un **ID interno único**; (3) fija el **estado canónico** ("RECIBIDO" = la única
-  verdad); (4) escribe en el **outbox** ("tengo que avisar que se creó" — clave para la Fase C).
+  caso); (2) le da un **ID interno único**; (3) fija el **estado canónico** ("Validada" = la única
+  verdad; la máquina de estados es `Recibida → Validada → Reservando → Reservada → Lista`, o
+  `Fallida/Cancelada`); (4) escribe en el **outbox** ("tengo que avisar que se creó" — clave para la
+  Fase C).
 - **Idioma:** `TDS` por **private endpoint** (cable privado; la BD no está en internet).
 
 ### FASE B — La Saga: apartar y valorizar (corazón de INI-01)
@@ -147,8 +149,9 @@ sin factura ni factura sin producto. Evita las dobles reservas y conflictos del 
 - **Idioma:** `HTTPS · OAuth2+PKCE` (PKCE = variante de OAuth2 más segura para móviles).
 
 **Paso 12 — Se guarda lo capturado**
-- **De:** Backend → **A:** (a) **DynamoDB** `SDK`: estado de sincronización; si estaba offline,
-  queda pendiente hasta que vuelva la señal (**store-and-forward** = guarda y reenvía). (b) **S3 +
+- **De:** Backend → **A:** (a) **DynamoDB** `SDK`: guarda el **estado de sincronización**. El patrón
+  **store-and-forward** ("guarda y reenvía") vive en la **app del conductor** (que retiene lo
+  capturado sin señal); DynamoDB es donde el backend registra ese estado al sincronizar. (b) **S3 +
   KMS** `HTTPS·KMS`: foto/firma **cifrada** y con **hash** (huella que prueba que no se alteró) —
   las evidencias de los USD 2.4M.
 
@@ -198,7 +201,9 @@ sin factura ni factura sin producto. Evita las dobles reservas y conflictos del 
 ---
 
 ## 2d. Por qué las conexiones son ASÍ (reglas deliberadas)
-- **Todo entra por el Gateway** → los backends nunca se exponen a Internet.
+- **El núcleo (B2B, operación, legados) entra por el Gateway** → los backends de Azure nunca se
+  exponen a Internet. La app del conductor tiene su **propio borde autenticado en AWS**
+  (HTTPS · OAuth2+PKCE) — es una segunda puerta, también controlada, no una excepción sin control.
 - **El OMS es el único que escribe la verdad** (Azure SQL) → una sola fuente de verdad.
 - **Nadie se integra punto-a-punto; todo pasa por el Bus** → mata el spaghetti. El OMS orquesta
   síncronamente **solo** la Saga (WMS+ERP), donde necesita consistencia inmediata.

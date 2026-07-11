@@ -93,7 +93,7 @@ C4Container
 | Observabilidad / IAM | PLT-01 / PLT-02 | Transversales | RNF-05/06/13/15 |
 
 ## La Saga coreografiada (flujo de reserva sin orquestador)
-1. `OMS` publica **OrdenValidada** → 2. `Inventario` la escucha, reserva y publica **InventarioReservado** → 3. `Adaptador ERP` la escucha, valoriza y publica **ValorizacionConfirmada** (o **Rechazada**) → 4. si fue **Rechazada**, `Inventario` la escucha y publica **InventarioLiberado** (compensación) → 5. los **proyectores** actualizan los read models y el portal/TMS ven el estado final.
-Nadie comanda a nadie: **cada paso es una reacción a un evento**, y el replay del log reconstruye cualquier estado (RF-19).
+1. `OMS` publica **OrdenValidada** → 2. `Inventario` la escucha, reserva local y publica **InventarioReservado** → 3. `Adaptador WMS` la escucha, hace la **reserva física** en el WMS on-prem y publica **ReservaFisicaConfirmada** → 4. `Adaptador ERP` la escucha, valoriza y publica **ValorizacionConfirmada** (o **Rechazada**) → 5. si fue **Rechazada**, **ambos reaccionan al mismo evento**: `Inventario` publica **InventarioLiberado** (libera lo local) y `Adaptador WMS` **libera la reserva física** y publica **ReservaFisicaLiberada** → 6. los **proyectores** actualizan los read models y el portal/TMS ven el estado final.
+Nadie comanda a nadie: **cada paso es una reacción a un evento** —incluida la compensación del WMS, que no la ordena nadie sino que la dispara el rechazo (RF-08)— y el replay del log reconstruye cualquier estado (RF-19).
 
 > Trade-off (para el comité): se gana autonomía, desacoplamiento y auditoría nativa (el log ES la historia); se paga con flujo más difícil de seguir — nadie "ve" la Saga completa, hay que reconstruirla con el correlation ID — y con consistencia eventual en todas las lecturas.

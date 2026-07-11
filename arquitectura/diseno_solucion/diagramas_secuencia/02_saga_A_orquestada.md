@@ -39,11 +39,13 @@ sequenceDiagram
     WMS-->>SAGA: OK
     SAGA->>ERP: 3. valorizar (comando)
     ERP-->>SAGA: RECHAZADO (422)
-    Note over SAGA: la Saga DECIDE compensar
-    SAGA->>INV: 4. liberar reserva (comando de COMPENSACIÓN)
+    Note over SAGA: la Saga DECIDE compensar (en orden inverso)
+    SAGA->>WMS: 4. liberar reserva FÍSICA (COMPENSACIÓN)
+    WMS-->>SAGA: liberado
+    SAGA->>INV: 5. liberar reserva local (COMPENSACIÓN)
     INV-->>SAGA: liberado
     SAGA->>OUT: publica InventarioLiberado + OrdenFallida
     Note over SAGA: estado → "Fallida" · todo auditado con correlationId
 ```
 
-**Lo que demuestra:** en A la coordinación y la compensación son **centralizadas** — la Saga ve el flujo completo y ordena el "liberar". Ventaja: control y visibilidad en un solo lugar (RF-08).
+**Lo que demuestra:** en A la coordinación y la compensación son **centralizadas** — la Saga ve el flujo completo y ordena el "liberar" **tanto en el WMS (físico) como local**, en orden inverso al de reserva. Que se compense la reserva física del almacén cuando el ERP rechaza es exactamente lo que exige RF-08 (no dejar stock apartado sin valorizar). Ventaja: control y visibilidad en un solo lugar. RF-08.

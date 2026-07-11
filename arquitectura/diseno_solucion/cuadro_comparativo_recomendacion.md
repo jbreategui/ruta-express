@@ -1,6 +1,6 @@
 # Cuadro Comparativo y Recomendación — Alternativas A y B
 
-**Nota:** ambas alternativas cubren el 100% de los 29 RF y 27 RNF y comparten la misma huella multinube (ADR-01, ADR-02). Se compara **arquitectura** (cómo se coordinan los servicios), no proveedores. Ninguna fue diseñada para perder: cada una gana en criterios distintos.
+**Nota:** ambas alternativas cubren los 29 RF (trazados en las tablas RF por contenedor de cada `02_nivel2`) y los 27 RNF, y comparten la misma huella multinube (ADR-01, ADR-02). Los **RNF se trazan** vía la matriz de `lineamientos_aplicados.md` (54 lineamientos ARQ/ESC/INT/OBS/SEG, que son los atributos de calidad de los RNF) y los `requerimientos/INI-0X/RNF-INI-0X.md`; no como una matriz RNF-por-componente. Se compara **arquitectura** (cómo se coordinan los servicios), no proveedores. Ninguna fue diseñada para perder: cada una gana en criterios distintos.
 
 | | **Alternativa A — Orquestada** | **Alternativa B — Coreografiada** |
 |---|---|---|
@@ -15,7 +15,7 @@ Escala 1–5 · el peso refleja la prioridad del caso (recuperarse de Cyber Days
 
 | Criterio | Peso | A | B | Sustento |
 |---|---:|---:|---:|---|
-| Cobertura RF/RNF (29 + 27) | 3 | 5 | 5 | Ambas trazan el 100%; ver tablas RF por contenedor en cada `02_nivel2` |
+| Cobertura RF/RNF (29 + 27) | 3 | 5 | 5 | Ambas trazan los 29 RF (tablas por contenedor en cada `02_nivel2`) y los 27 RNF (matriz `lineamientos_aplicados.md` + `RNF-INI-0X.md`) |
 | Factibilidad del MVP (Hito 4: 1 semana, 2 nubes, 3 patrones, IaC) | 3 | 5 | 3 | A se demuestra con orden→reserva→compensación visible; B exige event store, proyecciones y versionado de eventos desde el día 1 |
 | Operabilidad y trazabilidad del flujo | 2 | 5 | 3 | En A la Saga se consulta en un punto; en B se reconstruye por correlation ID a través del log |
 | Desacoplamiento y evolución a largo plazo | 2 | 3 | 5 | En B agregar un consumidor no toca a nadie; en A el orquestador concentra cambios |

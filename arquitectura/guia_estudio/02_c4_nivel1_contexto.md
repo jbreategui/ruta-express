@@ -63,7 +63,8 @@ va en el diagrama.
 ### Conductor
 - **Qué es:** el repartidor de última milla, en la calle con su app móvil.
 - **Por qué está:** actor de **INI-03**. Ejecuta la entrega física y registra evidencias (foto,
-  firma) que sustentan la liquidación — las 1,200 firmas perdidas / USD 2.4M retenidos.
+  firma) que sustentan la liquidación — las 1,200 firmas perdidas (pago retenido) y, en un
+  incidente aparte, los USD 2.4M que una cadena de retail retuvo por trazabilidad insuficiente.
 - **Relación:** "Entregas, tracking y evidencias" (a veces sin señal → offline).
 
 ### Operación RutaExpress

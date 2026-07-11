@@ -1,5 +1,9 @@
 # Hito 4 — Análisis y Alcance del MVP
 
+> **Nota:** este es el documento de **análisis inicial** del alcance. Para las cifras **finales** de
+> **costos** ver `costos_estimados.md`, y para el **alcance final de RF** ver `INFORME_HITO4.md` §3
+> (fuente de verdad). La decisión final de cómputo fue **AKS** (no Container Apps).
+
 **Base:** Alternativa A (orquestada) recomendada en el Hito 3. Lineamiento de implementación tomado de las clases: **Terraform + HCL** (Módulo 4), estructura `modules/ + environments/ + policy/`, y **GitHub Actions** para un CI de validación (Módulo 5).
 **Regla del enunciado:** prototipo/MVP · **mínimo 2 nubes** · **mínimo 3 patrones** · **100% IaC** · **costos por nube al mes** · API mock permitido.
 
@@ -8,7 +12,7 @@
 ## 1. Qué demuestra el MVP (la ruta crítica del caso)
 El MVP reproduce el flujo donde RutaExpress más sufrió — **duplicados de Cyber Days + caída del WMS de 6 h** — de punta a punta:
 
-1. **Cliente crea una orden** → API del OMS (Azure Container Apps).
+1. **Cliente crea una orden** → API del OMS (Azure AKS).
 2. **Deduplicación + idempotencia** (hash de contenido + idempotency key) → ataca los **32k duplicados** *(RF-03, RF-04)*.
 3. **Validación** y **estado canónico** "Validada" *(RF-02, RF-05)*.
 4. **Saga: reserva de inventario** → llama al **WMS mock**.
@@ -22,7 +26,7 @@ El MVP reproduce el flujo donde RutaExpress más sufrió — **duplicados de Cyb
 > Con este único flujo se tocan los 3 riesgos del anexo (disponibilidad, integridad, operación) y se demuestran 5 patrones.
 
 ## 2. Alcance IN / OUT
-> **El MVP implementa un SUBCONJUNTO de los 29 RF** — la **ruta crítica** del caso (~15 RF: RF-01…11, RF-14, RF-16, RF-22, RF-23). El resto queda cubierto **en el diseño** (Hito 3) y como trabajo futuro, según corresponde a un prototipo/MVP.
+> **El MVP implementa un SUBCONJUNTO de los 29 RF** — la **ruta crítica** del caso (**~14 RF**: RF-01…08, RF-10, RF-11, RF-14, RF-16, RF-22, RF-23; **RF-09 queda solo en diseño**). El resto queda cubierto **en el diseño** (Hito 3) y como trabajo futuro, según corresponde a un prototipo/MVP. (Alcance final en `INFORME_HITO4.md` §3.)
 
 **Dentro (MVP):** OMS con dedup/idempotencia/Saga/estado/CQRS · bus con DLQ · última milla en AWS · mocks WMS/ERP · IaC completo de ambas nubes · CI de validación · tabla de costos.
 **Fuera (queda como "trabajo futuro"):** GCP/analítica · portal/CRM/TMS reales · GitOps con Argo CD · Canary/Blue-Green · Feature Flags · Event Sourcing completo (eso es la Alternativa B) · multi-región/DR real.
@@ -35,8 +39,8 @@ El MVP reproduce el flujo donde RutaExpress más sufrió — **duplicados de Cyb
 | **BD transaccional + read model** | Azure SQL | Estado, outbox, proyección de consulta | CQRS | RF-05, RF-10 |
 | **Observabilidad** | Azure Log Analytics (Container Insights) | Logs, correlation ID | — | RNF-05, RNF-15 |
 | **Bridge intercloud** | AKS (deployment) → AWS SQS | Reenvía eventos del bus a AWS (durable) | Adaptador, store-and-forward | RF-14 |
-| **Última milla** | AWS Lambda | Consume evento (por SQS), store-and-forward | Microservicio, EDA | RF-22, RF-23 |
-| **Sync móvil** | AWS DynamoDB | Estado de entrega | — | RF-22 |
+| **Última milla** | AWS Lambda | Consume evento (por SQS), dedup por eventId, store-and-forward **del borde backend** | Microservicio, EDA | RF-22/23 *(lado backend; el offline móvil queda en diseño)* |
+| **Sync móvil** | AWS DynamoDB | Estado de entrega/sincronización | — | RF-22/23 *(backend)* |
 | **Mock WMS** | AKS (deployment, stub) | Simula reserva física; modo éxito/lento/caído | (habilita probar resiliencia) | RF-11 |
 | **Mock ERP** | AKS (deployment, stub) | Simula valorización; modo aceptar/rechazar | (habilita probar Saga) | RF-08 |
 
@@ -61,13 +65,15 @@ implementacion_mvp/
 │   │   ├── azure-aks/              # clúster (OMS, mocks y bridge como deployments)
 │   │   ├── azure-acr/             # registro de imágenes
 │   │   ├── azure-servicebus/      # topic + DLQ
-│   │   ├── azure-data/            # Azure SQL (estado + read model)
+│   │   ├── azure-sql/            # Azure SQL (estado + read model)
+│   │   ├── azure-network/        # VNet, subredes, private endpoints
 │   │   ├── azure-observability/   # Log Analytics / Container Insights
 │   │   ├── azure-keyvault/        # secretos
 │   │   ├── k8s-workloads/         # deployments en AKS (provider kubernetes/helm)
 │   │   ├── aws-sqs/              # cola intercloud + DLQ
 │   │   ├── aws-lambda/           # última milla
-│   │   └── aws-dynamodb/
+│   │   ├── aws-dynamodb/
+│   │   └── aws-bridge-identity/  # rol IAM del bridge (mínimo privilegio)
 │   ├── environments/dev/
 │   │   ├── providers.tf             # azurerm ~> 4.66, aws ~> 6.39
 │   │   ├── main.tf                  # compone los módulos
@@ -77,7 +83,7 @@ implementacion_mvp/
 │   └── policy/                      # OPA/Rego + conftest (diferenciador)
 │       ├── required_tags.rego       # Environment, ManagedBy, Owner, CostCenter
 │       ├── storage_secure.rego      # sin acceso público, TLS 1.2+
-│       ├── resource_limits.rego     # límites de contenedor
+│       ├── resource_limits.rego     # node_count acotado (≤ 3)
 │       └── allowed_location.rego
 ├── apps/
 │   ├── oms/                         # microservicio OMS
@@ -93,15 +99,18 @@ implementacion_mvp/
 ## 7. Estimación de costos (enfoque)
 SKUs de nivel **dev**, con scale-to-zero donde se pueda. Estimación preliminar (a confirmar con las calculadoras oficiales al construir):
 
+> **La tabla final y detallada de costos está en `costos_estimados.md`** (fuente de verdad,
+> ~60–77 USD/mes por la elección de **AKS**). Este resumen se mantiene solo como orientación.
+
 | Recurso | Nube | SKU dev | Costo aprox. USD/mes |
 |---|---|---|---|
-| Container Apps (OMS + 2 mocks) | Azure | Consumo, scale-to-zero | 5 – 15 |
+| AKS (OMS + 2 mocks + bridge como deployments) | Azure | 1 nodo B-series | ~30 – 40 |
 | Service Bus | Azure | Standard | ~10 |
-| Azure SQL / Cosmos serverless | Azure | Basic / serverless | 5 – 10 |
+| Azure SQL | Azure | Basic / serverless | 5 – 10 |
 | Log Analytics | Azure | Pago por GB (poco volumen) | 2 – 5 |
 | Lambda | AWS | Free tier / on-demand | ~0 – 1 |
 | DynamoDB | AWS | On-demand | ~0 – 1 |
-| **Total estimado (dev)** | | | **~25 – 40 USD/mes** |
+| **Total estimado (dev)** | | | **~60 – 77 USD/mes** |
 
 > El costo real en un lab con `destroy` al terminar cada sesión es casi nulo; la tabla es el "costo si quedara encendido un mes".
 

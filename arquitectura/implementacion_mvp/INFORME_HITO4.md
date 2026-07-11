@@ -20,7 +20,7 @@ El MVP está **completo y validado localmente** (tests + `terraform validate`). 
 | **API mock permitido** | Mocks WMS/ERP (modos ok/slow/down · accept/reject) |
 
 ## 3. Alcance del MVP
-El MVP implementa un **subconjunto** de los 29 RF: la **ruta crítica** (~14 RF: RF-01…08, RF-10, RF-11, RF-14, RF-16, RF-22, RF-23). El resto queda cubierto **en el diseño (Hito 3)** y como trabajo futuro. Precisiones de alcance: **RF-09 (reconciliación de inventario) NO está implementado** en el MVP (solo en el diseño); **RF-02** es validación básica (tipado, cantidades) sin catálogo de SKU ni cobertura de ventana; **RF-05** valida transiciones en cancelación. Esto es lo esperado en un prototipo/MVP.
+El MVP implementa un **subconjunto** de los 29 RF: la **ruta crítica** (~14 RF: RF-01…08, RF-10, RF-11, RF-14, RF-16, RF-22, RF-23). El resto queda cubierto **en el diseño (Hito 3)** y como trabajo futuro. Precisiones de alcance: **RF-09 (reconciliación de inventario) NO está implementado** en el MVP (solo en el diseño); **RF-02** es validación básica (tipado, cantidades) sin catálogo de SKU ni cobertura de ventana; **RF-05** valida transiciones en cancelación; **RF-22/RF-23** se demuestran solo del **lado backend** (la Lambda consume por SQS con idempotencia por eventId y persiste en DynamoDB — el patrón store-and-forward durable del borde), **no** el lado móvil offline (no hay app de conductor en el MVP), que queda en el diseño. Esto es lo esperado en un prototipo/MVP.
 
 - **Dentro:** OMS (dedup, idempotencia, Saga, CQRS, resiliencia) · bus con DLQ · última milla en AWS · mocks WMS/ERP · IaC de ambas nubes · CI de validación.
 - **Fuera (trabajo futuro):** GCP/analítica · portal/CRM/TMS reales · GitOps · multi-región/DR · API Management/WAF · Event Sourcing completo (Alternativa B).
@@ -38,6 +38,11 @@ Ruta crítica: **crear orden → dedup + idempotencia → Saga (reserva) → WMS
 | Bridge | AKS (deployment) → AWS SQS | Puente intercloud durable |
 | Última milla | AWS Lambda | Consume SQS, dedup por eventId, DynamoDB |
 | Sync móvil | AWS DynamoDB | Estado de entrega |
+
+> **Simplificaciones declaradas del MVP** (vs. el diseño del Hito 3): el bus usa **solo Azure Service
+> Bus** (el diseño combina Event Hubs + Service Bus; para la ruta crítica basta Service Bus con topic
+> + DLQ); el publicador local es un `ConsolePublisher` (el bus real se activa al desplegar); mocks
+> WMS/ERP en vez de los sistemas on-prem reales.
 
 *(Diagramas C4 niveles 1-2-3 y de secuencia: ver `../diseno_solucion/`.)*
 
@@ -72,11 +77,13 @@ Precios de lista aprox. (a confirmar en calculadoras oficiales). Detalle en `cos
 - **Mínimo privilegio:** Lambda con rol IAM acotado; usuario IAM del bridge solo `sqs:SendMessage`; AKS jala del ACR por identidad (AcrPull), sin llaves; **Service Bus con reglas Send (OMS) y Listen (bridge)** por topic, sin la Root manage key.
 - **Red:** Azure SQL **sin acceso público**, accesible solo por **private endpoint** dentro de la VNet (AKS en Azure CNI); TLS 1.2.
 
+> **Honestidad de alcance (dev):** en el MVP el OMS se expone por un **LoadBalancer con IP pública y sin OAuth2** (para poder demostrarlo sin desplegar APIM); el cruce a AWS va por **Internet con una access key IAM de mínimo privilegio**, no por VPN. Ambos son aceptables para un prototipo dev pero **no** para producción: el diseño (Hito 3) exige **APIM + OAuth2 en el borde** (RF-13, RNF-06/13) y **VPN IPsec + mTLS** entre nubes (ADR-08). Además, el **Key Vault** del MVP guarda los secretos pero los pods los consumen vía `kubernetes_secret`; el paso a **Key Vault CSI + Workload Identity** queda como mejora (bloque C).
+
 ## 9. Verificación (lo que está probado)
 | Qué | Resultado |
 |---|---|
 | OMS — lint (flake8) | Limpio |
-| OMS — tests (pytest) | **20/20 pasan** (dedup con ventana, idempotencia sin reserva huérfana, Saga feliz, compensación con liberación del WMS, orden multilínea, cancelación con compensación, reserva atómica sin sobreventa, WMS caído, stock insuficiente, resiliencia) |
+| OMS — tests (pytest) | **21/21 pasan** (dedup con ventana, idempotencia sin reserva huérfana, **conflicto de idempotencia key+contenido → 409**, Saga feliz, compensación con liberación del WMS, orden multilínea, cancelación con compensación, reserva atómica sin sobreventa, WMS caído, stock insuficiente, resiliencia) |
 | Terraform — `validate` | **Success** (12 módulos, 2 nubes) |
 | CI (GitHub Actions) | Valida IaC + apps en cada push/PR (no despliega) |
 
@@ -84,7 +91,7 @@ Precios de lista aprox. (a confirmar en calculadoras oficiales). Detalle en `cos
 - **No desplegado aún**: el `apply` es el paso final; requiere credenciales y probablemente ajustes de integración (cuota de vCPU en la suscripción, build de imágenes, apply de dos etapas).
 - **Runtime no probado** para mocks, bridge y Lambda (solo el OMS tiene suite de tests). Se validan al desplegar.
 - **No implementado en el MVP:** RF-09 (reconciliación de inventario) — solo en el diseño; validación de reglas logísticas de RF-02 es básica.
-- **Trabajo futuro (bloque C):** Key Vault CSI + Workload Identity (en vez de kubernetes_secret), API Management/WAF delante del OMS, GitOps con Argo CD, GCP/analítica, DR multi-región.
+- **Trabajo futuro (bloque C):** Key Vault CSI + Workload Identity (en vez de kubernetes_secret), API Management/WAF + OAuth2 delante del OMS, **conectividad privada intercloud (VPN IPsec + mTLS)** en vez del salto por Internet, GitOps con Argo CD, GCP/analítica, DR multi-región.
 
 ## 11. Cómo desplegar y evidenciar
 - **Despliegue:** runbook paso a paso en `README.md` (apply 2 etapas + build de imágenes + destroy).

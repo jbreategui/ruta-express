@@ -3,7 +3,8 @@
 ## Problema (AS-IS)
 La última milla depende de conductores con **conectividad variable** y de excepciones sin normalizar. Consecuencias del caso:
 
-- **1,200 entregas quedaron sin firma digital** por pérdida de evidencias offline (reinstalación/cambio de equipo) → el cliente retuvo el pago (**USD 2.4M** pendientes de liquidación por falta de sustento).
+- **1,200 entregas quedaron sin firma digital** por pérdida de evidencias offline (reinstalación/cambio de equipo) → el cliente **retuvo el pago hasta una conciliación manual** por falta de sustento.
+- **Una cadena de retail retuvo USD 2.4M** (incidente distinto): sus reportes indicaban menos entregas exitosas que las reales, y la **conciliación tomó 23 días** por la falta de trazabilidad y evidencias íntegras.
 - Excepciones con **texto libre y categorías distintas** entre app, TMS y CRM → el algoritmo de rutas no aprende y no se puede conciliar.
 - **12.5% de entregas fallidas** (≈ 8,500 paquetes/día), de las cuales el **34% se relaciona con dirección o ausencia** — prevenibles antes de salir a ruta.
 - **18,000 pedidos retrasados** por sincronización deficiente entre sistemas y **8% de eventos de tracking** llega con más de 20 minutos de retraso.

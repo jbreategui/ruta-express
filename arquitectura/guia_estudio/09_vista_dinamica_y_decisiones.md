@@ -27,8 +27,9 @@ Cómo el OMS evita los **32,000 duplicados** del caso. Dos mecanismos juntos:
 ### 2. Saga A — ORQUESTADA (éxito y compensación)
 La reserva con un **director**. Todas las flechas de decisión **salen de la Saga**:
 - **Éxito:** Saga → reserva local → WMS (reserva física) → ERP (valorizar) → publica `OrdenLista`.
-- **Compensación:** si el ERP **rechaza (422)** → la Saga **decide** y ordena `liberar` → publica
-  `OrdenFallida`. Todo con correlationId.
+- **Compensación:** si el ERP **rechaza (422)** → la Saga **decide** y ordena liberar **en orden
+  inverso: primero la reserva física del WMS, luego la local** → publica `OrdenFallida`. Todo con
+  correlationId. (Así no queda stock apartado en el almacén sin valorizar.)
 - Lo que demuestra: coordinación y compensación **centralizadas** (control y visibilidad). RF-08.
 
 ### 3. Saga B — COREOGRAFIADA (mismo caso, sin director)
@@ -36,8 +37,9 @@ Idéntico escenario, pero **nadie orquesta**: cada servicio reacciona a un event
 - **Éxito:** OMS publica `OrdenValidada` → Inventario reacciona y reserva → publica
   `InventarioReservado` → Adaptador ERP reacciona y valoriza → publica `ValorizaciónConfirmada` →
   el Proyector actualiza el read model.
-- **Compensación:** el Adaptador publica `ValorizaciónRechazada` → el **propio Inventario reacciona**
-  (Manejador de Compensación) y libera. **Nadie se lo ordena.**
+- **Compensación:** el Adaptador ERP publica `ValorizaciónRechazada` → **dos servicios reaccionan al
+  mismo evento**: el Servicio de Inventario libera lo local y el Adaptador WMS libera lo físico.
+  **Nadie se lo ordena** — el rechazo lo gatilla.
 - El contraste en una línea:
   - **A:** `Saga → INV → WMS → ERP`, la Saga **ordena** liberar. Estrella = la Saga.
   - **B:** `evento → INV → evento → ERP → evento`, el rechazo **gatilla** la liberación. Estrella =

@@ -2,15 +2,19 @@
 
 Estos PNG son la **versión visual con íconos oficiales** de AWS/Azure/GCP, generados con la librería `diagrams` (la que enseña el profe en el Taller 3). Fuente de verdad: los modelos Mermaid en `../alternativa_A_orquestada/` y `../alternativa_B_coreografiada/`.
 
-## Archivos generados
+## Archivos generados (10 PNG)
 | PNG | Nivel |
 |---|---|
 | `A_n1_contexto.png` | A · Contexto |
 | `A_n2_contenedores.png` | A · Contenedores (íconos de nube) |
-| `A_n3_reserva_inventario.png` | A · Reserva de Inventario (orquestada) |
+| `A_n3_reserva_inventario.png` | A · N3 Reserva de Inventario — INI-01 (orquestada) |
+| `A_n3b_bus_eventos.png` | A · N3 Bus de Eventos — INI-02 |
+| `A_n3c_ultima_milla.png` | A · N3 Backend de Última Milla — INI-03 |
 | `B_n1_contexto.png` | B · Contexto |
 | `B_n2_contenedores.png` | B · Contenedores (íconos de nube) |
-| `B_n3_inventario.png` | B · Servicio de Inventario (coreografiado) |
+| `B_n3_inventario.png` | B · N3 Servicio de Inventario — INI-01 (coreografiado) |
+| `B_n3b_log_eventos.png` | B · N3 Log de Eventos — INI-02 (Event Sourcing) |
+| `B_n3c_ultima_milla.png` | B · N3 Backend de Última Milla — INI-03 |
 
 ## Cómo regenerarlos
 ```

@@ -15,7 +15,9 @@ resource "aws_dynamodb_table" "this" {
     type = "S"
   }
 
-  # Índice secundario para consultar el estado de entrega POR ORDEN (RF-22)
+  # Índice secundario aprovisionado para una futura consulta del estado de entrega POR ORDEN
+  # (RF-22, lado backend). El MVP escribe por event_id y aún no lo consulta; queda listo para
+  # cuando se agregue el endpoint de consulta (requeriría también dynamodb:Query en el rol).
   global_secondary_index {
     name            = "by-order"
     hash_key        = "order_id"

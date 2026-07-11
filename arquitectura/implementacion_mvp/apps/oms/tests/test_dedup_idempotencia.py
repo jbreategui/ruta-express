@@ -1,7 +1,9 @@
 """RF-03 (deduplicación por hash) y RF-04 (idempotencia por key)."""
+import pytest
+
 from app.saga import ReservationSaga
 from app.schemas import LineIn, OrderIn
-from app.service import OrderService
+from app.service import IdempotencyConflict, OrderService
 from tests.conftest import FakeErpAccept, FakeWmsOk
 
 
@@ -36,3 +38,11 @@ def test_pedido_distinto_es_nuevo(session):
     r2, dup2 = svc.create_order(session, _orden(qty=3), "key-2")  # distinto contenido
     assert dup2 is False
     assert r2["order_id"] != r1["order_id"]
+
+
+def test_misma_key_contenido_distinto_es_conflicto(session):
+    """RF-04 escenario negativo: reusar la key con OTRO pedido -> conflicto (409)."""
+    svc = _service()
+    svc.create_order(session, _orden(qty=2), "key-1")
+    with pytest.raises(IdempotencyConflict):
+        svc.create_order(session, _orden(qty=5), "key-1")  # misma key, contenido distinto

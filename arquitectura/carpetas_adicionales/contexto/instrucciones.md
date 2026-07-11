@@ -1,3 +1,5 @@
+> **⚠️ Borrador interno de trabajo (NO es el entregable ni el spec vigente).** Este documento fue una guía de arranque temprana; algunas de sus indicaciones **quedaron superadas** por las decisiones finales del diseño (p. ej. el hub va en **Azure**, no en AWS — ver ADR-02; los patrones finales del MVP son Microservicios/EDA/Saga/CQRS/Resiliencia, no DDD/Bulkhead). La **fuente de verdad** es `diseno_solucion/` (Hito 3), `implementacion_mvp/INFORME_HITO4.md` (Hito 4) y el enunciado oficial en `transcripcion/`. Se conserva solo como registro histórico.
+
 > **Ubicación:** este documento y sus insumos viven en `utec/arquitectura/`. Todas las rutas de este spec son relativas a esa carpeta (p. ej. `INI-01_*`, `carpetas_adicionales/lineamientos`, `ARQUITECTURA_SOLUCION_TO_BE/`). La casuística y el enunciado están en `utec/transcripcion/` (`proyecto-rutaexpress.md` cubre Caso 6a + Anexo 6b; `enunciado-proyecto-integrador-final.md`).
 
 ## Rol / Persona

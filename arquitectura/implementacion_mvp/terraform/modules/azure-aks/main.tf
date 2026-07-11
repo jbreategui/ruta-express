@@ -24,11 +24,13 @@ resource "azurerm_kubernetes_cluster" "this" {
     type = "SystemAssigned"
   }
 
-  # Azure CNI: los pods entran a la VNet -> pueden resolver el private endpoint de SQL
+  # Azure CNI: los pods entran a la VNet -> pueden resolver el private endpoint de SQL.
+  # service_cidr = red interna de Services de K8s; se usa 10.3.0.0/16 para NO solaparse con los
+  # CIDR del diseño (Azure 10.0/16, AWS 10.1/16, GCP 10.2/16) — regla de conectividad intercloud.
   network_profile {
     network_plugin = "azure"
-    service_cidr   = "10.2.0.0/16"
-    dns_service_ip = "10.2.0.10"
+    service_cidr   = "10.3.0.0/16"
+    dns_service_ip = "10.3.0.10"
   }
 
   # Observabilidad del clúster (Container Insights) hacia Log Analytics

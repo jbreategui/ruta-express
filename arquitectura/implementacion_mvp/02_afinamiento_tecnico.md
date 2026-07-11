@@ -14,7 +14,7 @@ El evento nace en Azure (bus) y lo consume la última milla en AWS. Cómo cruza 
 | C. HTTP directo a Lambda URL | El publicador llama la Function URL por HTTPS | Simplísimo pero sin durabilidad (si la Lambda cae, se pierde) |
 | D. PrivateLink / VPN intercloud | Conectividad privada real | Producción; overkill para el MVP dev |
 
-**Decisión: Opción B (bridge → SQS → Lambda).** Es coherente con el C4 ("AMQP → bridge"), con el tema *store-and-forward* del caso, y con lo enseñado (colas SQS como desacople, Módulo 3). El bridge worker se despliega como otra Container App; la SQS + el *event source mapping* de la Lambda son Terraform puro.
+**Decisión: Opción B (bridge → SQS → Lambda).** Es coherente con el C4 ("AMQP → bridge"), con el tema *store-and-forward* del caso, y con lo enseñado (colas SQS como desacople, Módulo 3). El bridge worker se despliega como **otro deployment en AKS** (junto al OMS y los mocks); la SQS + el *event source mapping* de la Lambda son Terraform puro.
 
 - **Flujo:** `Service Bus (topic) → bridge worker (Azure) → SQS (AWS) → Lambda (AWS) → DynamoDB`.
 - **Durabilidad:** SQS con **DLQ** (redrive policy, maxReceiveCount=3) — nada se pierde si la Lambda falla (RF-16 replicado en el borde AWS).
@@ -78,7 +78,9 @@ Región referencia: Azure **East US 2** / AWS **us-east-1**. SKUs de nivel **dev
 | Azure SQL Database | Basic (5 DTU, 2GB) | ~$4.90/mes | ~5 |
 | Log Analytics | Pay-as-you-go | ~$2.30/GB (primeros GB con free grant) | 0 – 3 |
 | Key Vault | Standard | ~$0.03/10k operaciones | <1 |
-| **Subtotal Azure** | | | **~50 – 64** |
+| Private Endpoint (SQL) | por hora + datos | ~$0.01/h | ~7 – 8 |
+| IP pública estándar (LoadBalancer del OMS) | por hora | ~$0.005/h | ~3 – 4 |
+| **Subtotal Azure** | | | **~60 – 76** |
 
 > **Cambio vs. Container Apps:** al usar **AKS** (por coherencia con el C4) el costo sube ~$35/mes respecto a Container Apps, por el **node pool + ACR**. Es el precio de mantener el diseño; se mitiga con una VM Burstable pequeña y **`terraform destroy` al terminar** (el node pool es el driver, y apagado no cuesta).
 
@@ -93,9 +95,11 @@ Región referencia: Azure **East US 2** / AWS **us-east-1**. SKUs de nivel **dev
 ### Total
 | Nube | USD/mes (dev, encendido todo el mes) |
 |---|---|
-| Azure | ~50 – 64 |
+| Azure | ~60 – 76 |
 | AWS | ~0 – 1 |
-| **Total** | **~50 – 65** |
+| **Total** | **~60 – 77** |
+
+> Cifra final y detallada en `costos_estimados.md` (fuente de verdad).
 
 > Con la práctica del profe (`terraform destroy` al terminar cada sesión), el costo real tiende a **centavos/pocos dólares**. La tabla es "si quedara encendido un mes completo". Los drivers de costo son el **node pool de AKS** y el **Service Bus Standard**; el node pool se apaga con `destroy`, y Service Bus se puede bajar a Basic (colas en vez de topic).
 

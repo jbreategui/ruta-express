@@ -18,6 +18,15 @@ TERMINAL_STATES = ("Cancelada", "Fallida", "Rechazada")
 CANCELABLE_STATES = ("Validada", "Reservando", "Reservada", "Lista")
 
 
+class IdempotencyConflict(Exception):
+    """Misma Idempotency-Key reusada con contenido DISTINTO (RF-04, escenario negativo).
+    El contrato responde 409: la key no se puede reutilizar para otro pedido."""
+
+    def __init__(self, key):
+        self.key = key
+        super().__init__(f"Idempotency-Key reusada con contenido distinto: {key}")
+
+
 def content_hash(client_id, destinatario, window, lines):
     """Hash de contenido para deduplicación (RF-03): cliente + destinatario + ventana + líneas.
     Incluir la ventana evita el falso duplicado del escenario negativo de RF-03."""
@@ -53,14 +62,20 @@ class OrderService:
     def create_order(self, session, data, idempotency_key, correlation_id=None):
         correlation_id = correlation_id or str(uuid.uuid4())
 
-        # 1. Idempotencia: misma key -> respuesta original (RF-04)
-        hit = self._idem_hit(session, idempotency_key)
-        if hit:
-            return hit
-
-        # 2. Dedup por contenido, EXCLUYENDO órdenes terminales (A2: no bloquear al cliente)
+        # 0. Hash de contenido (sirve para dedup y para detectar el conflicto de idempotencia)
         chash = content_hash(data.client_id, getattr(data, "destinatario", None),
                              data.window, data.lines)
+
+        # 1. Idempotencia: misma key (RF-04)
+        existing = session.get(IdempotencyKey, idempotency_key)
+        if existing is not None:
+            # RF-04 (escenario negativo): misma key + contenido DISTINTO -> conflicto 409.
+            prior = session.get(Order, existing.order_id) if existing.order_id else None
+            if prior is not None and prior.content_hash != chash:
+                raise IdempotencyConflict(idempotency_key)
+            return self._idem_hit(session, idempotency_key)
+
+        # 2. Dedup por contenido, EXCLUYENDO órdenes terminales (A2: no bloquear al cliente)
         dup = (session.query(Order)
                .filter(Order.content_hash == chash)
                .filter(Order.status.notin_(TERMINAL_STATES))

@@ -69,7 +69,7 @@ Cada decisión de este diseño es defendible con una lámina del curso. Mapa par
 - **mTLS entre nubes y hacia on-prem** *(extensión)* — capa adicional sobre la VPN IPsec, justificada por **defensa en profundidad** (M6 S3 p.30): si el túnel se compromete, los servicios igual se autentican mutuamente.
 - **AsyncAPI para documentar los eventos** *(extensión)* — el curso enseña que "el contrato es la fuente de verdad" y que el evento también es un contrato (M7 S1 p.20-22); AsyncAPI es al evento lo que OpenAPI es al REST.
 
-## Pendientes según el método del curso
-- `decisiones_diseño.md` (criterios de decisión + modelo LLM usado + fecha) — lo exige la estructura del Taller 2/3.
-- Renderizado con **diagrams de Python** (íconos de nube, un `.py` por nivel) — Taller 3, pasos 6-7; se genera **desde** este modelo.
-- Alternativa B (coreografiada) con su propio C4.
+## Entregables de esta carpeta (todos presentes)
+- `decisiones_diseño.md` — ADR-01…09 (criterios de decisión + fecha), según el Taller 2/3.
+- `diagramas_python/` — renderizado con **diagrams de Python** (íconos de nube): 10 PNG (N1/N2/N3 de A y B).
+- `alternativa_B_coreografiada/` — Alternativa B con su propio C4 completo (N1/N2/N3).

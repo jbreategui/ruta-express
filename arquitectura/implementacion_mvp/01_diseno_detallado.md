@@ -43,6 +43,7 @@ Todos llevan `eventId` (para idempotencia del consumidor), `correlationId`, `tim
 | `InventarioLiberado` | compensación | orderId, motivo | (auditoría) |
 | `OrdenLista` | valorización OK | orderId, estado="Lista" | última milla, portal |
 | `OrdenFallida` | Saga aborta | orderId, causa | portal/CRM |
+| `OrdenCancelada` | cancelación del cliente | orderId, causa | portal/CRM, última milla |
 
 ## 4. Modelo de datos (Azure SQL)
 ```
@@ -106,7 +107,7 @@ Transiciones inválidas se rechazan (p. ej. Entregada→Reservada) — RF-05.
 | `azure-aks` | cluster_name, node_vm_size, node_count, log_analytics_id (Container Insights) | kube_host, kube_config (sensitive), cluster_id, kubelet_identity |
 | `azure-acr` | registry_name, sku=Basic, aks_kubelet_identity (AcrPull) | login_server, acr_id |
 | `azure-servicebus` | namespace_name, topic_name, sku=Standard | connection_string (sensitive), topic_id, dlq |
-| `azure-data` | server_name, db_name, sku=Basic, admin_login | sql_connection_string (sensitive) |
+| `azure-sql` | server_name, db_name, sku=Basic, admin_login | sql_connection_string (sensitive) |
 | `azure-observability` | workspace_name, retention_days | workspace_id, workspace_key (sensitive) |
 | `azure-keyvault` | vault_name, secrets{}, aks_identity (get/list) | vault_uri, vault_id |
 | `k8s-workloads` (kubernetes/helm provider) | kube_config, acr_login_server, image_tag, env/secret refs | deployments: oms, wms-mock, erp-mock, bridge |
@@ -132,7 +133,7 @@ El naming de recursos incorpora `owner_alias` + `environment` para no colisionar
 |---|---|
 | `required_tags.rego` | Todo recurso con tags `Environment, ManagedBy, Owner, CostCenter` |
 | `storage_secure.rego` | Storage/SQL sin acceso público, TLS 1.2+ |
-| `resource_limits.rego` | Node pool AKS con VM permitida y node_count acotado (evita sobredimensionar) |
+| `resource_limits.rego` | Node pool AKS con `node_count` acotado (≤ 3, evita sobredimensionar) |
 | `allowed_location.rego` | Región en {eastus, eastus2} (Azure) |
 
 ## 12. CI (GitHub Actions — Módulo 5, mínimo de validación)

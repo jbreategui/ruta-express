@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from .db import SessionLocal, engine, init_schema
 from .events import drain_outbox
 from .schemas import OrderIn, OrderOut, OrderStateOut
-from .service import OrderService
+from .service import IdempotencyConflict, OrderService
 
 
 @asynccontextmanager
@@ -41,8 +41,13 @@ def crear_orden(data: OrderIn, session: Session = Depends(get_session),
                 correlation_id: str = Header(default=None, alias="X-Correlation-Id")):
     if not idempotency_key:
         raise HTTPException(status_code=400, detail="Falta el header Idempotency-Key")
-    resp, _dup = service.create_order(session, data, idempotency_key,
-                                      correlation_id or str(uuid.uuid4()))
+    try:
+        resp, _dup = service.create_order(session, data, idempotency_key,
+                                          correlation_id or str(uuid.uuid4()))
+    except IdempotencyConflict:
+        # RF-04 (escenario negativo): la key ya se usó para un pedido distinto.
+        raise HTTPException(status_code=409,
+                            detail="Idempotency-Key ya usada con un contenido distinto")
     drain_outbox(session)  # publica los eventos encolados (consola en local, bus al desplegar)
     return resp
 

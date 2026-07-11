@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Genera los 6 diagramas C4 (Nivel 1-2-3 x Alternativa A y B).
+Genera los 10 diagramas C4 (Nivel 1-2-3 x Alternativa A y B; A y B con 3 diagramas N3 c/u).
 - Nivel 1 y 3: notacion C4 nativa (cajas con texto adentro, limpias).
 - Nivel 2: iconos oficiales de nube (Azure/AWS/GCP), como pide el enunciado.
-Ejecutar:  python generar_diagramas.py   ->  6 PNG en esta carpeta.
+Ejecutar:  python generar_diagramas.py   ->  10 PNG en esta carpeta.
 """
 import os
 os.environ["PATH"] += os.pathsep + r"C:\Program Files\Graphviz\bin"
@@ -109,9 +109,11 @@ def a_n2():
         tms = Server("TMS - Transporte")
         por = Server("Portal B2B / CRM")
         mapa = Server("Mapas y tráfico")
+        legado = Server("Canales legados")
 
         cli >> Edge(label="HTTPS/REST") >> apim
         ope >> Edge(label="consultas") >> apim
+        legado >> Edge(label="órdenes archivo · SFTP") >> apim
         con >> Edge(label="HTTPS · PKCE") >> mob
         apim >> Edge(label="comandos") >> oms
         oms >> Edge(label="TDS") >> sql
@@ -168,11 +170,14 @@ def b_n2():
         tms = Server("TMS - Transporte")
         por = Server("Portal B2B / CRM")
         mapa = Server("Mapas y tráfico")
+        legado = Server("Canales legados")
 
         cli >> Edge(label="comandos") >> apim
-        ope >> Edge(label="consultas (CQRS)") >> query
+        ope >> Edge(label="consultas") >> apim
+        legado >> Edge(label="órdenes archivo · SFTP") >> apim
         con >> Edge(label="HTTPS · PKCE") >> mob
         apim >> Edge(label="comandos") >> oms
+        apim >> Edge(label="consultas CQRS · solo lectura") >> query
         oms >> Edge(label="OrdenValidada") >> log
         log >> Edge(label="entrega evento") >> inv
         inv >> Edge(label="InventarioReservado") >> log
@@ -291,6 +296,7 @@ def a_n3_bus():
         router >> Relationship("regula") >> backp
         replay >> Relationship("reinyecta") >> router
         p2p >> Relationship("flujo transicional") >> cons
+        router >> Relationship("salud de colas y DLQ · OTLP") >> obs
 
 
 def a_n3_ultima():
@@ -345,6 +351,7 @@ def b_n3_log():
             prio = Container("Priorizador por SLA", "Servicio", "Críticos primero")
             replay = Container("Motor de Replay", "Servicio", "Reconstruye estado por rango")
             seq = Container("Secuenciador", "Servicio", "Orden lógico por agregado")
+            p2p = Container("Adaptador Punto-a-Punto", "Servicio", "Convivencia transicional")
 
         prod >> Relationship("publica evento · AMQP (TLS)") >> append
         append >> Relationship("valida") >> schema
@@ -359,6 +366,8 @@ def b_n3_log():
         retry >> Relationship("dead-letter") >> dlq
         replay >> Relationship("lee historia") >> store
         replay >> Relationship("reinyecta") >> router
+        p2p >> Relationship("flujo transicional") >> cons
+        router >> Relationship("salud de colas, DLQ y lag · OTLP") >> obs
 
 
 def b_n3_ultima():
@@ -393,6 +402,7 @@ def b_n3_ultima():
         apimov >> Relationship("ubicación") >> track
         track >> Relationship("persiste") >> ddb
         sync >> Relationship("entrega/excepción") >> outbox
+        track >> Relationship("tracking") >> outbox
         outbox >> Relationship("publica evento · HTTPS → AMQP") >> log
         log >> Relationship("read models de entrega") >> proy
 

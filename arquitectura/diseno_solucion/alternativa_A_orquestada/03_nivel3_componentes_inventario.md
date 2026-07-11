@@ -29,9 +29,10 @@ C4Component
     Rel(reserva, inv, "Verifica y reserva", "in-proc")
     Rel(reserva, aud, "Registra el movimiento", "in-proc")
     Rel(saga, adapt, "Reserva física (comando)", "in-proc")
-    Rel(adapt, wms, "Reserva/consulta", "API · VPN (IPsec)")
+    Rel(adapt, wms, "Reserva/libera/consulta", "API · VPN (IPsec)")
     Rel(saga, erp, "Valorización (comando)", "API · VPN (IPsec)")
-    Rel(saga, reserva, "Liberar (COMPENSACIÓN, comando)", "in-proc")
+    Rel(saga, reserva, "Liberar local (COMPENSACIÓN, comando)", "in-proc")
+    Rel(saga, adapt, "Liberar física (COMPENSACIÓN, comando)", "in-proc")
     Rel(inv, recon, "Deriva conflictos", "in-proc")
     Rel(reserva, sql, "Persiste reserva + outbox", "TDS · private endpoint (TLS)")
     Rel(outbox, sql, "Lee outbox", "TDS")
@@ -50,7 +51,7 @@ C4Component
 | Inventario y Reservas | in-proc | Disponibilidad y estado del stock | — | RF-06 |
 | Registro Auditable | in-proc | Reserva/liberación con actor, motivo, correlation ID | Sin borrado, solo apéndice | RF-07 |
 | Reconciliador | in-proc | Conflictos WMS central vs. locales | Trazabilidad | RF-09 |
-| Adaptador de Transición WMS | API · VPN (IPsec) | Convivencia con WMS on-prem | Circuit Breaker + Timeout + Retry | RF-11 |
+| Adaptador de Transición WMS | API · VPN (IPsec) | Reserva y **libera** física en el WMS on-prem (convivencia y compensación) | Circuit Breaker + Timeout + Retry | RF-08, RF-11 |
 | Publicador Outbox | AMQP · TLS | Publicación confiable del resultado | Secretos en Key Vault | RF-14 |
 
 ## Contraste directo A vs B (mismo dominio: reserva de inventario)

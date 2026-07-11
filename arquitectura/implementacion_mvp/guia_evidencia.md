@@ -36,7 +36,7 @@ curl -X POST http://$OMS/v1/ordenes -H "Idempotency-Key: k1" \
 | Respuesta `201 {"status":"Lista"}` | Saga completa OK |
 | `curl http://$OMS/v1/ordenes/<orderId>` → estado del read model | **CQRS** (RF-10) |
 | Logs de la Lambda (CloudWatch) mostrando el evento recibido | **EDA + bridge intercloud** (RF-14) |
-| Ítem en **DynamoDB** con ese order | última milla registró la entrega (RF-22) |
+| Ítem en **DynamoDB** con ese order | store-and-forward durable del borde backend (RF-22/23, lado backend; el offline móvil queda en diseño) |
 
 ### 2.2 Idempotencia (RF-04)
 ```bash
@@ -46,6 +46,7 @@ curl -X POST http://$OMS/v1/ordenes -H "Idempotency-Key: k1" ... (mismo body)
 | Capturar | Demuestra |
 |---|---|
 | Devuelve el **mismo orderId**, sin crear otra orden ni reservar de nuevo | idempotencia por key |
+| Repetir `k1` con un body **distinto** → respuesta **409** | conflicto de idempotencia (RF-04, escenario negativo) |
 
 ### 2.3 Deduplicación (RF-03)
 ```bash

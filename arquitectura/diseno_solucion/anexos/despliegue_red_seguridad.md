@@ -34,7 +34,7 @@ C4Deployment
     }
 
     Deployment_Node(inet, "Internet", "Usuarios y apps") {
-        Container(clientes, "Clientes B2B / App Conductores", "Navegador / móvil", "Único acceso: por el WAF")
+        Container(clientes, "Clientes B2B / App Conductores", "Navegador / móvil", "B2B entra por el WAF (Azure); la app móvil por el borde de AWS")
     }
 
     Deployment_Node(aws, "AWS — Última milla", "Región primaria") {
@@ -61,10 +61,10 @@ C4Deployment
     Rel(apim, oms, "REST interno", "HTTPS/TLS intra-VNet")
     Rel(oms, sql, "TDS", "Private Endpoint")
     Rel(oms, bus, "AMQP", "Private Endpoint")
-    Rel(iam, oms, "OIDC / secretos", "privado")
-    Rel(obs, oms, "OTLP", "privado")
+    Rel(oms, iam, "valida token / obtiene secretos", "OIDC / Key Vault · privado")
+    Rel(oms, obs, "trazas y métricas", "OTLP · privado")
 
-    Rel(clientes, mobile, "App conductores", "HTTPS · OAuth2 + PKCE (vía Amazon API Gateway)")
+    Rel(clientes, mobile, "App conductores", "HTTPS · OAuth2 + PKCE (borde de AWS)")
     Rel(bus, mobile, "Eventos", "VPN/PrivateLink intercloud (IPsec)")
     Rel(mobile, s3, "PUT evidencia", "HTTPS · KMS")
     Rel(mobile, ddb, "sync", "SDK privado")

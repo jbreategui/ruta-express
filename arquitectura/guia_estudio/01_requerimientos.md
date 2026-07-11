@@ -19,7 +19,8 @@ El caso lo cuantifica en dinero — esa es tu munición ante el comité:
 |---|---|---|
 | WMS caído 6 h en Cyber Days → cola gigante | **240,000 pedidos**, USD **1.1M** en multas | INI-01 + INI-02 |
 | Pedidos duplicados por reintentos mal hechos | **32,000** dobles | INI-01 |
-| Entregas sin firma digital (evidencia offline perdida) | **1,200**, USD **2.4M** retenidos | INI-03 |
+| Entregas sin firma digital (evidencia offline perdida) | **1,200** entregas, pago retenido | INI-03 |
+| Retención de una cadena de retail (reportes/evidencias no cuadran) | USD **2.4M**, conciliación 23 días | INI-03 |
 | Entregas fallidas, 34% por dirección/ausencia | **12.5%** (~8,500/día) | INI-03 |
 | "Intento fallido" mostrado *después* de una entrega exitosa | eventos fuera de orden | INI-02 |
 

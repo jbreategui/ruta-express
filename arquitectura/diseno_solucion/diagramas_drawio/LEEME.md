@@ -1,5 +1,10 @@
 # Diagramas C4 en draw.io — RutaExpress
 
+> **Nota:** el conjunto **completo y actualizado** de diagramas renderizados son los **10 PNG** de
+> `../diagramas_python/` (N1/N2/N3 de A y B, con los 3 diagramas N3 por alternativa). Este `.drawio`
+> cubre los **6 diagramas núcleo** (N1/N2/N3 de A y B, dominio inventario) como versión editable a
+> mano; los N3 adicionales (bus/log de eventos y última milla) están solo en los PNG de Python.
+
 **Archivo:** `RutaExpress_C4.drawio` — un solo documento con **6 pestañas** (una por nivel y alternativa):
 
 | Pestaña | Contenido |
