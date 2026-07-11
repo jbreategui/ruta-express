@@ -326,7 +326,78 @@ def a_n3_ultima():
         track >> Relationship("persiste") >> ddb
 
 
+def b_n3_log():
+    with Diagram("Alternativa B (Coreografiada) - Nivel 3: Log de Eventos", filename="B_n3b_log_eventos",
+                 show=False, direction="LR", graph_attr=C4, edge_attr=EDGE, node_attr=NODE, outformat="png"):
+        prod = System("Productores", "Órdenes, Inventario, Adaptadores, última milla", external=True)
+        proy = System("Proyectores / CQRS", "Servicio de Consultas", external=True)
+        cons = System("Consumidores", "portal, TMS, analítica", external=True)
+        dlq = Database("DLQ", "mensajes muertos")
+        obs = System("Observabilidad", "Azure Monitor", external=True)
+
+        with SystemBoundary("Log de Eventos (fuente de verdad)"):
+            append = Container("Ingesta Append-Only", "Servicio", "Escritura inmutable + correlationId")
+            schema = Container("Validador y Versionado", "Servicio", "Esquema versionado")
+            store = Container("Almacén de Eventos", "Event Store", "Retención inmutable: el log ES la historia")
+            router = Container("Enrutador / Suscripciones", "Servicio", "Entrega por topic")
+            retry = Container("Reintentos + DLQ", "Servicio", "Backoff, dead-letter")
+            backp = Container("Backpressure", "Servicio", "Regula ante saturación")
+            prio = Container("Priorizador por SLA", "Servicio", "Críticos primero")
+            replay = Container("Motor de Replay", "Servicio", "Reconstruye estado por rango")
+            seq = Container("Secuenciador", "Servicio", "Orden lógico por agregado")
+
+        prod >> Relationship("publica evento · AMQP (TLS)") >> append
+        append >> Relationship("valida") >> schema
+        schema >> Relationship("persiste inmutable") >> store
+        store >> Relationship("entrega") >> router
+        router >> Relationship("ordena") >> seq
+        seq >> Relationship("prioriza") >> prio
+        prio >> Relationship("entrega · AMQP (TLS)") >> cons
+        router >> Relationship("alimenta proyecciones (CQRS)") >> proy
+        router >> Relationship("regula") >> backp
+        prio >> Relationship("reintenta") >> retry
+        retry >> Relationship("dead-letter") >> dlq
+        replay >> Relationship("lee historia") >> store
+        replay >> Relationship("reinyecta") >> router
+
+
+def b_n3_ultima():
+    with Diagram("Alternativa B (Coreografiada) - Nivel 3: Backend de Última Milla", filename="B_n3c_ultima_milla",
+                 show=False, direction="LR", graph_attr=C4, edge_attr=EDGE, node_attr=NODE, outformat="png"):
+        app = System("App de Conductores", "móvil", external=True)
+        log = System("Log de Eventos", "fuente de verdad", external=True)
+        ddb = Database("Sincronización móvil", "DynamoDB")
+        s3 = Database("Evidencias", "S3 + KMS")
+        proy = System("Proyectores / CQRS", "Servicio de Consultas", external=True)
+
+        with SystemBoundary("Backend de Última Milla (coreografiado)"):
+            apimov = Container("API Móvil", "REST", "OAuth2+PKCE")
+            inbox = Container("Consumidor (Inbox)", "Suscriptor", "Dedup por eventId")
+            sync = Container("Store-and-Forward", "Servicio", "Confirma y reintenta offline")
+            evid = Container("Gestor de Evidencias", "Servicio", "Vínculo a orden + hash")
+            tax = Container("Taxonomía de Excepciones", "Servicio", "Código + motivo")
+            acc = Container("Acciones Automáticas", "Servicio", "Reintento/devolución/escala")
+            prev = Container("Acciones Preventivas", "Servicio", "Riesgo dirección/ausencia")
+            track = Container("Registro de Tracking", "Servicio", "Ubicación cada 2 min")
+            outbox = Container("Publicador Outbox", "Servicio", "Publica el resultado como evento")
+
+        app >> Relationship("entregas · HTTPS OAuth2+PKCE") >> apimov
+        apimov >> Relationship("captura offline") >> sync
+        log >> Relationship("eventos despacho · AMQP → HTTPS") >> inbox
+        inbox >> Relationship("evalúa riesgo") >> prev
+        sync >> Relationship("persiste") >> evid
+        evid >> Relationship("cifrada + hash · KMS") >> s3
+        sync >> Relationship("estado sync") >> ddb
+        apimov >> Relationship("clasifica") >> tax
+        tax >> Relationship("dispara") >> acc
+        apimov >> Relationship("ubicación") >> track
+        track >> Relationship("persiste") >> ddb
+        sync >> Relationship("entrega/excepción") >> outbox
+        outbox >> Relationship("publica evento · HTTPS → AMQP") >> log
+        log >> Relationship("read models de entrega") >> proy
+
+
 if __name__ == "__main__":
     a_n1(); a_n2(); a_n3(); a_n3_bus(); a_n3_ultima()
-    b_n1(); b_n2(); b_n3()
-    print("Listo: 8 PNG generados en", os.getcwd())
+    b_n1(); b_n2(); b_n3(); b_n3_log(); b_n3_ultima()
+    print("Listo: 10 PNG generados en", os.getcwd())

@@ -31,7 +31,7 @@ Ambas son multinube best-of-breed con la **misma huella** (Azure núcleo, AWS ú
 | Archivo | Contenido |
 |---|---|
 | `alternativa_A_orquestada/01…03_*.md` | C4 L1-L2-L3 de la Alternativa A. **Tres diagramas de Nivel 3** (uno por iniciativa): `03_...inventario` (INI-01), `03b_...bus_eventos` (INI-02), `03c_...ultima_milla` (INI-03) |
-| `alternativa_B_coreografiada/01…03_*.md` | C4 L1-L2-L3 de la Alternativa B |
+| `alternativa_B_coreografiada/01…03_*.md` | C4 L1-L2-L3 de la Alternativa B. **Tres diagramas de Nivel 3** (uno por iniciativa): `03_...inventario` (INI-01), `03b_...log_eventos` (INI-02, Event Sourcing), `03c_...ultima_milla` (INI-03) |
 | `diagramas_secuencia/` | **Vista dinámica** (complementa al C4 estático): recepción/dedup, Saga A orquestada, Saga B coreografiada y resiliencia del WMS — muestra el comportamiento en el tiempo y el contraste A vs B |
 | `anexos/despliegue_red_seguridad.md` | **Anexo (no es un nivel C4 del entregable):** vista de despliegue/red/seguridad de la alternativa recomendada — responde el feedback del profesor ("ver la red, cómo se conectan, seguridad") |
 | `decisiones_diseño.md` | ADR-01 … ADR-09 (incluye la bifurcación A/B y por qué el hub en Azure es un ADR, no una alternativa) |
