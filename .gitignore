@@ -17,8 +17,4 @@ __pycache__/
 *.pyc
 *.db
 
-# --- Material con copyright del profesor (excluido de repo PÚBLICO) ---
-proyecto/
-clase/
-work/
-emitir_poliza_vehicular.md
+
