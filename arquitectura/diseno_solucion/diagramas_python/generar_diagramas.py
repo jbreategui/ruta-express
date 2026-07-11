@@ -218,15 +218,15 @@ def a_n3():
         saga >> Relationship("reservar (comando)") >> reserva
         saga >> Relationship("liberar - COMPENSACIÓN") >> reserva
         saga >> Relationship("reserva física (comando)") >> adapt
-        saga >> Relationship("valorización (comando) · VPN") >> erp
+        saga >> Relationship("valorización (comando) · VPN (IPsec)") >> erp
         reserva >> Relationship("verifica y reserva") >> inv
         reserva >> Relationship("registra") >> aud
-        adapt >> Relationship("reserva/consulta · VPN") >> wms
+        adapt >> Relationship("reserva/consulta · VPN (IPsec)") >> wms
         inv >> Relationship("deriva conflictos") >> recon
-        reserva >> Relationship("persiste + outbox") >> sql
+        reserva >> Relationship("persiste · TDS · private endpoint") >> sql
         outbox >> Relationship("lee outbox") >> sql
-        outbox >> Relationship("publica resultado · AMQP") >> bus
-        outbox >> Relationship("secretos") >> iam
+        outbox >> Relationship("publica resultado · AMQP (TLS)") >> bus
+        outbox >> Relationship("secretos · Key Vault") >> iam
 
 
 def b_n3():
@@ -251,14 +251,14 @@ def b_n3():
         inbox >> Relationship("valorización rechazada") >> comp
         reserva >> Relationship("registra") >> aud
         comp >> Relationship("registra") >> aud
-        reserva >> Relationship("reserva atómica") >> invdb
-        comp >> Relationship("libera") >> invdb
+        reserva >> Relationship("reserva atómica · TDS · private endpoint") >> invdb
+        comp >> Relationship("libera · TDS") >> invdb
         recon >> Relationship("concilia") >> invdb
         outbox >> Relationship("lee outbox") >> invdb
-        outbox >> Relationship("publica resultado · AMQP") >> log
+        outbox >> Relationship("publica resultado · AMQP (TLS)") >> log
         log >> Relationship("eventos confirmados") >> proj
         proj >> Relationship("actualiza proyección") >> query
-        outbox >> Relationship("secretos") >> iam
+        outbox >> Relationship("secretos · Key Vault") >> iam
 
 
 def a_n3_bus():
@@ -280,12 +280,12 @@ def a_n3_bus():
             seq = Container("Secuenciador", "Servicio", "Orden lógico por agregado")
             p2p = Container("Adaptador Punto-a-Punto", "Servicio", "Convivencia transicional")
 
-        prod >> Relationship("publica evento · AMQP") >> ingesta
+        prod >> Relationship("publica evento · AMQP (TLS)") >> ingesta
         ingesta >> Relationship("valida") >> schema
         schema >> Relationship("evento válido") >> router
         router >> Relationship("ordena") >> seq
         seq >> Relationship("prioriza") >> prio
-        prio >> Relationship("entrega · AMQP") >> cons
+        prio >> Relationship("entrega · AMQP (TLS)") >> cons
         prio >> Relationship("reintenta") >> retry
         retry >> Relationship("dead-letter") >> dlq
         router >> Relationship("regula") >> backp
@@ -312,9 +312,9 @@ def a_n3_ultima():
             prev = Container("Acciones Preventivas", "Servicio", "Riesgo dirección/ausencia")
             track = Container("Registro de Tracking", "Servicio", "Ubicación cada 2 min")
 
-        app >> Relationship("entregas / evidencias") >> apimov
+        app >> Relationship("entregas · HTTPS OAuth2+PKCE") >> apimov
         apimov >> Relationship("captura offline") >> sync
-        bus >> Relationship("eventos despacho") >> inbox
+        bus >> Relationship("eventos · AMQP → HTTPS") >> inbox
         sync >> Relationship("persiste") >> evid
         evid >> Relationship("cifrada + hash · KMS") >> s3
         sync >> Relationship("estado sync") >> ddb
